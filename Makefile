@@ -1,6 +1,6 @@
 NAME = Minishell
 OBJS = $(SRCS:.c=.o)
-SRCS = main.c 
+SRCS = main.c signal.c
 
 CFLAGS = -Wall -Wextra -Werror 
 LIBFT_LIB = libft/libft.a

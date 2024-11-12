@@ -1,27 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/20 18:03:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/12 16:09:34 by jrasamim         ###   ########.fr       */
+/*   Created: 2024/11/12 18:18:07 by jrasamim          #+#    #+#             */
+/*   Updated: 2024/11/12 18:46:23 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_strncmp(char *s1, char *s2, size_t n)
+static void	handle_sigint(int code)
 {
-	size_t	i;
+	(void)code;
+	printf("\n");
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	if (received_signal == 0)
+		rl_redisplay();
+}
 
-	i = 0;
-	while ((s1[i] || s2[i]) && i < n)
-	{
-		if ((unsigned char)s1[i] != (unsigned char)s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		i++;
-	}
-	return (0);
+void	signals(void)
+{
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, SIG_IGN);
 }

@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 17:27:01 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/09/26 14:38:45 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:11:00 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *s, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
+int					ft_strcmp(char *s1, char *s2);
 char				**ft_split(char const *s, char c);
 char				*ft_strchr(char *str, int c);
 void				ft_striteri(char *s, void (*f)(unsigned int, char *));

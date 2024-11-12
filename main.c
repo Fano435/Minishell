@@ -6,11 +6,13 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/11 19:34:47 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/12 18:57:47 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+pid_t	received_signal;
 
 char	*extract_cmd(char **paths, char *str)
 {
@@ -46,7 +48,8 @@ void	exec(char **args, int pipe_fd[2])
 	char	*cmd;
 	char	**paths;
 
-	if (fork() == 0)
+	received_signal = fork();
+	if (received_signal == 0)
 	{
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
@@ -58,21 +61,44 @@ void	exec(char **args, int pipe_fd[2])
 	}
 }
 
+char	*header_prompt(void)
+{
+	char	curr_dir[1024];
+	char	*login;
+
+	login = getenv("USER");
+	ft_strlcat(login, "@~", ft_strlen(login) + 3);
+	getcwd(curr_dir, sizeof(curr_dir));
+	if (ft_strcmp(getenv("USER"), "root") == 0)
+		ft_strlcat(curr_dir, "# ", sizeof(curr_dir));
+	else
+		ft_strlcat(curr_dir, "$ ", sizeof(curr_dir));
+	ft_strlcat(login, curr_dir, sizeof(curr_dir));
+	return (login);
+}
+
 int	main(void)
 {
 	char	*rl;
 	char	**args;
 	int		pipe_fd[2];
-	int		status;
+	char	*header;
 
-	// afficher le nom de la machine, le repertoire courant +
-	// "$" si utilisateur normal || "#" si admin root
-	rl = readline("[MINISHELL] ~ $ ");
-	args = ft_split(rl, ' ');
-	pipe(pipe_fd);
-	exec(args, pipe_fd);
-	wait(&status);
-	printf("%d\n", status);
+	signals();
+	header = header_prompt();
+	while (1)
+	{
+		printf("%d", received_signal);
+		rl = readline(header);
+		if (rl == NULL)
+			break ;
+		add_history(rl);
+		args = ft_split(rl, ' ');
+		pipe(pipe_fd);
+		exec(args, pipe_fd);
+		wait(NULL);
+		received_signal = 0;
+	}
 	rl_clear_history();
 	return (0);
 }
