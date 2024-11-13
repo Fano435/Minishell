@@ -6,13 +6,13 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/12 18:57:47 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/13 18:38:10 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-pid_t	received_signal;
+pid_t	g_signal;
 
 char	*extract_cmd(char **paths, char *str)
 {
@@ -48,8 +48,8 @@ void	exec(char **args, int pipe_fd[2])
 	char	*cmd;
 	char	**paths;
 
-	received_signal = fork();
-	if (received_signal == 0)
+	g_signal = fork();
+	if (g_signal == 0)
 	{
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
@@ -74,7 +74,7 @@ char	*header_prompt(void)
 	else
 		ft_strlcat(curr_dir, "$ ", sizeof(curr_dir));
 	ft_strlcat(login, curr_dir, sizeof(curr_dir));
-	return (login);
+	return (ft_strdup(login));
 }
 
 int	main(void)
@@ -88,17 +88,27 @@ int	main(void)
 	header = header_prompt();
 	while (1)
 	{
-		printf("%d", received_signal);
 		rl = readline(header);
 		if (rl == NULL)
 			break ;
 		add_history(rl);
 		args = ft_split(rl, ' ');
+		if (ft_strcmp(args[0], "echo") == 0)
+		{
+			ft_echo(&args[1]);
+			continue ;
+		}
+		if (ft_strcmp(args[0], "cd") == 0)
+		{
+			ft_cd(args[1], header);
+			continue ;
+		}
 		pipe(pipe_fd);
 		exec(args, pipe_fd);
 		wait(NULL);
-		received_signal = 0;
+		g_signal = 0;
 	}
 	rl_clear_history();
+	free(header);
 	return (0);
 }

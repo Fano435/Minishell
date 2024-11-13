@@ -1,23 +1,38 @@
-NAME = Minishell
-OBJS = $(SRCS:.c=.o)
-SRCS = main.c signal.c
+NAME = minishell
+CFLAGS = -Wall -Wextra -Werror
 
-CFLAGS = -Wall -Wextra -Werror 
+SRC_DIR = src/
+OBJ_DIR = obj/
+INCLUDE	=	-I ./include -I ./libft
 LIBFT_LIB = libft/libft.a
+
+FILES = main signal ft_echo ft_cd
+
+SRCS	=	$(addprefix $(SRC_DIR), $(addsuffix .c, $(FILES)))
+OBJS	=	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(FILES)))
+
+OBJF	=	.cache_exits
+
+$(OBJF) :
+	@mkdir -p $(OBJ_DIR)
 
 .PHONY: all clean fclean re
 
 all: ${NAME}
 
-${LIBFT_LIB}:
-	make -C libft
+${NAME}: ${OBJS} $(LIBFT_LIB)
+	cc $(CFLAGS) $(OBJS) $(LIBFT_LIB) -lreadline $(INCLUDE) -o $@
 
-${NAME}: ${OBJS} ${LIBFT_LIB}
-	cc $(CFLAGS) -o $@ $^ -I./ -lreadline
+$(OBJ_DIR)%.o : $(SRC_DIR)%.c | $(OBJF)
+	cc $(CFLAGS) $(INCLUDE) -c $< -o $@
+
+$(LIBFT_LIB):
+	make -C libft
 
 clean:
 	make clean -C libft
-	rm -f $(OBJS)
+	@rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJF)
 
 fclean: 
 	make fclean -C libft
