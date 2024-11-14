@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/13 18:38:10 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/14 19:23:07 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,18 +77,17 @@ char	*header_prompt(void)
 	return (ft_strdup(login));
 }
 
-int	main(void)
+int	main(int ac, char **av, char **env)
 {
 	char	*rl;
 	char	**args;
 	int		pipe_fd[2];
-	char	*header;
+	t_data	data;
 
-	signals();
-	header = header_prompt();
+	init_data(ac, av, env, &data);
 	while (1)
 	{
-		rl = readline(header);
+		rl = readline("minishell > ");
 		if (rl == NULL)
 			break ;
 		add_history(rl);
@@ -100,7 +99,7 @@ int	main(void)
 		}
 		if (ft_strcmp(args[0], "cd") == 0)
 		{
-			ft_cd(args[1], header);
+			ft_cd(&data, args[1]);
 			continue ;
 		}
 		pipe(pipe_fd);
@@ -109,6 +108,5 @@ int	main(void)
 		g_signal = 0;
 	}
 	rl_clear_history();
-	free(header);
 	return (0);
 }

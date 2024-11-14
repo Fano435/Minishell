@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_pwd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/27 11:15:55 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/14 17:08:56 by jrasamim         ###   ########.fr       */
+/*   Created: 2024/11/14 18:31:14 by jrasamim          #+#    #+#             */
+/*   Updated: 2024/11/14 19:24:40 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-t_list	*ft_lstnew(void *content)
+void	ft_pwd(t_data *data)
 {
-	t_list	*el;
+	char	cwd[PATH_MAX];
 
-	el = malloc(sizeof(t_list));
-	if (!el)
-		return (NULL);
-	el->content = content;
-	// el->content = ft_strdup(content);
-	// if (!el->content)
-	// 	return (NULL);
-	el->next = NULL;
-	return (el);
+	if (getcwd(cwd, PATH_MAX))
+		printf("%s\n", cwd);
+	else
+	{
+		perror("pwd");
+		data->exit_code = 1;
+	}
 }

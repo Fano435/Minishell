@@ -5,9 +5,8 @@ OBJS	= ft_isalpha.o ft_isdigit.o ft_isalnum.o ft_isascii.o ft_isprint.o \
 	ft_atoi.o ft_strchr.o ft_strrchr.o ft_strnstr.o ft_memcmp.o ft_memchr.o ft_memset.o \
 	ft_bzero.o ft_memcpy.o ft_memmove.o ft_strdup.o ft_calloc.o ft_strjoin.o ft_split.o \
 	ft_itoa.o ft_substr.o ft_strtrim.o ft_strmapi.o ft_striteri.o ft_putchar_fd.o \
-	ft_putstr_fd.o ft_putendl_fd.o ft_putnbr_fd.o ft_free_tab.o ft_strcmp.o
-
-OBJSB = ft_lstnew.o ft_lstsize.o ft_lstadd_back.o ft_lstlast.o ft_lstiter.o \
+	ft_putstr_fd.o ft_putendl_fd.o ft_putnbr_fd.o ft_free_tab.o ft_strcmp.o \
+	ft_lstnew.o ft_lstsize.o ft_lstadd_back.o ft_lstlast.o ft_lstiter.o \
 	ft_lstdelone.o ft_lstclear.o ft_lstadd_front.o ft_lstmap.o
 
 SRCS	= $(OBJS:.o=.c)
@@ -23,13 +22,11 @@ $(NAME): $(OBJS)
 	cc $(CFLAGS) -c $< -o $@ -I./
 
 clean:
-	rm -f $(OBJS) $(OBJSB)
+	rm -f $(OBJS)
 
 fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
 
-bonus: ${NAME} ${OBJSB}
-	ar crs ${NAME} ${OBJSB}
 
