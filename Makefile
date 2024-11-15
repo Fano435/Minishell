@@ -6,7 +6,7 @@ OBJ_DIR = obj/
 INCLUDE	=	-I ./include -I ./libft
 LIBFT_LIB = libft/libft.a
 
-FILES = main signal ft_echo ft_cd ft_pwd init
+FILES = main init signal list_utils ft_echo ft_cd ft_pwd ft_export
 
 SRCS	=	$(addprefix $(SRC_DIR), $(addsuffix .c, $(FILES)))
 OBJS	=	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(FILES)))

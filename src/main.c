@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/14 19:23:07 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/15 17:50:01 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,16 @@ int	main(int ac, char **av, char **env)
 		if (ft_strcmp(args[0], "cd") == 0)
 		{
 			ft_cd(&data, args[1]);
+			continue ;
+		}
+		if (ft_strcmp(args[0], "pwd") == 0)
+		{
+			ft_pwd(&data);
+			continue ;
+		}
+		if (ft_strcmp(args[0], "export") == 0)
+		{
+			ft_export(&data, &args[1]);
 			continue ;
 		}
 		pipe(pipe_fd);

@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 17:31:26 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/14 19:11:46 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/15 19:28:54 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	print_error(char *str)
 		write(2, str, ft_strlen(str));
 }
 
-void	update_env(t_data *data, char *var)
+static void	update_wd(t_data *data, char *var)
 {
 	char	*pwd;
 	char	buffer[PATH_MAX];
@@ -49,7 +49,6 @@ void	update_env(t_data *data, char *var)
 		}
 		if (!pwd)
 			return (print_error(ERR_MALLOC));
-		printf("%s\n", pwd);
 		tmp->content = pwd;
 	}
 }
@@ -64,7 +63,6 @@ void	ft_cd(t_data *data, char *path)
 		perror("cd");
 		return ;
 	}
-	update_env(data, "OLDPWD=");
-	update_env(data, "PWD=");
-	printf("\nCURRENT WORKING DIRECTORY : %s\n", getcwd(NULL, 1024));
+	update_wd(data, "OLDPWD=");
+	update_wd(data, "PWD=");
 }
