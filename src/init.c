@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:45:18 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/15 17:28:39 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/19 19:19:47 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,26 @@ char	*find_var(t_list **lst, char *str)
 		tmp = tmp->next;
 	}
 	return (NULL);
+}
+
+char	*get_var_value(char *var)
+{
+	int		i;
+	char	*value;
+
+	i = 0;
+	if (!var || !ft_strchr(var, '='))
+	{
+		print_error("HOME not set\n");
+		return (NULL);
+	}
+	while (var[i] && var[i] != '=')
+		i++;
+	if (!var[i + 1])
+		return (NULL);
+	value = ft_strdup(&var[i + 1]);
+	free(var);
+	return (value);
 }
 
 int	copy_env(t_data *data, char **env)

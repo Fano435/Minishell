@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/15 17:50:01 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/19 19:55:18 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,38 @@ char	*header_prompt(void)
 	return (ft_strdup(login));
 }
 
+bool	is_builtin(char *cmd)
+{
+	if (!cmd)
+		return (false);
+	if (!ft_strncmp("echo", cmd, INT_MAX) || !ft_strncmp("cd", cmd, INT_MAX)
+		|| !ft_strncmp("pwd", cmd, INT_MAX) || !ft_strncmp("export", cmd,
+			INT_MAX) || !ft_strncmp("unset", cmd, INT_MAX) || !ft_strncmp("env",
+			cmd, INT_MAX) || !ft_strncmp("exit", cmd, INT_MAX))
+		return (true);
+	return (false);
+}
+
+void	exec_builtin(t_data *data, char *cmd, char **args)
+{
+	if (ft_strcmp(cmd, "echo") == 0)
+		ft_echo(args);
+	if (ft_strcmp(cmd, "cd") == 0)
+		ft_cd(data, args);
+	if (ft_strcmp(cmd, "pwd") == 0)
+		ft_pwd(data);
+	if (ft_strcmp(cmd, "export") == 0)
+		ft_export(data, args);
+	if (ft_strcmp(cmd, "unset") == 0)
+		ft_unset(data, args);
+	if (ft_strcmp(cmd, "unset") == 0)
+		ft_unset(data, args);
+	if (ft_strcmp(cmd, "env") == 0)
+		ft_env(data);
+	if (ft_strcmp(cmd, "exit") == 0)
+		ft_exit(data, args);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	char	*rl;
@@ -92,29 +124,14 @@ int	main(int ac, char **av, char **env)
 			break ;
 		add_history(rl);
 		args = ft_split(rl, ' ');
-		if (ft_strcmp(args[0], "echo") == 0)
+		if (is_builtin(args[0]))
+			exec_builtin(&data, args[0], &args[1]);
+		else
 		{
-			ft_echo(&args[1]);
-			continue ;
+			pipe(pipe_fd);
+			exec(args, pipe_fd);
+			wait(NULL);
 		}
-		if (ft_strcmp(args[0], "cd") == 0)
-		{
-			ft_cd(&data, args[1]);
-			continue ;
-		}
-		if (ft_strcmp(args[0], "pwd") == 0)
-		{
-			ft_pwd(&data);
-			continue ;
-		}
-		if (ft_strcmp(args[0], "export") == 0)
-		{
-			ft_export(&data, &args[1]);
-			continue ;
-		}
-		pipe(pipe_fd);
-		exec(args, pipe_fd);
-		wait(NULL);
 		g_signal = 0;
 	}
 	rl_clear_history();

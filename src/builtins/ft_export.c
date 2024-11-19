@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:45:35 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/15 20:22:30 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/18 14:43:35 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ static bool	valid_identifier(char *str)
 	{
 		if (!ft_isalnum(str[i]) && str[i] != '_')
 			return (false);
+		i++;
 	}
 	return (true);
 }
@@ -83,7 +84,7 @@ void	update_env(t_list **env, int pos, char *value)
 
 	i = 0;
 	tmp = *env;
-	while (env && i < pos)
+	while (tmp && i < pos)
 	{
 		tmp = tmp->next;
 		i++;
@@ -91,17 +92,19 @@ void	update_env(t_list **env, int pos, char *value)
 	tmp->content = ft_strdup(value);
 }
 
+// Reste a recuperer le parsing pour correctement stocker les variables
+// dans le format NOM=VALEUR, en traitant bien les quotes
+
 void	ft_export(t_data *data, char **args)
 {
-	t_list	*new_var;
 	int		pos;
+	t_list	*new_var;
 
 	if (!args || !args[0])
 		return (export_no_args(data));
 	while (*args)
 	{
 		pos = var_pos(data->env, *args);
-		printf("%s\n", *args);
 		if (!valid_identifier(*args))
 		{
 			print_error("not a valid identifier\n");

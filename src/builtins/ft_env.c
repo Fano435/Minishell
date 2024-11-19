@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/14 18:31:14 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/14 19:24:40 by jrasamim         ###   ########.fr       */
+/*   Created: 2024/11/18 15:19:00 by jrasamim          #+#    #+#             */
+/*   Updated: 2024/11/18 15:58:35 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_pwd(t_data *data)
+void	ft_env(t_data *data)
 {
-	char	cwd[PATH_MAX];
+	t_list	*tmp;
 
-	if (getcwd(cwd, PATH_MAX))
-		printf("%s\n", cwd);
-	else
+	tmp = data->env;
+	if (!tmp)
+		return ;
+	while (tmp)
 	{
-		perror("pwd");
-		data->exit_code = 1;
+		if (ft_strchr(tmp->content, '='))
+			printf("%s\n", (char *)tmp->content);
+		tmp = tmp->next;
 	}
 }

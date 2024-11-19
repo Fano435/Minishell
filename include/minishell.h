@@ -3,6 +3,7 @@
 
 # include "../libft/libft.h"
 # include <fcntl.h>
+# include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
@@ -19,12 +20,11 @@
 # define PIPE 5
 # define CMD 6
 # define ARG 7
+# define FILE 8
 
 # define ERR_MALLOC "malloc error\n"
 # define ERR_PIPE "pipe error\n"
 # define ERR_FORK "fork error\n"
-
-# define PATH_MAX 255
 
 extern pid_t		g_signal;
 
@@ -36,10 +36,19 @@ typedef struct s_token
 	struct s_token	*next;
 }					t_token;
 
+typedef struct s_cmd
+{
+	int				infile;
+	int				outfile;
+	char			**cmd_args;
+	struct s_cmd	*next;
+}					t_cmd;
+
 typedef struct s_data
 {
 	t_list			*env;
-	t_token			*token;
+	t_token			*tokens;
+	t_cmd			*cmds;
 	int				exit_code;
 	int				pipe[2];
 }					t_data;
@@ -51,9 +60,16 @@ void				init_data(int ac, char **av, char **env, t_data *data);
 
 // builtins
 void				ft_echo(char **args);
-void				ft_cd(t_data *data, char *path);
+void				ft_cd(t_data *data, char **args);
 void				ft_pwd(t_data *data);
 void				ft_export(t_data *data, char **args);
+void				ft_unset(t_data *data, char **args);
+void				ft_env(t_data *data);
+void				ft_exit(t_data *data, char **args);
+
+// builtins_utils
+int					var_pos(t_list *env, char *var);
+char				*get_var_value(char *var);
 
 // list_utils
 void				print_list(t_list *list);

@@ -6,8 +6,9 @@ OBJ_DIR = obj/
 INCLUDE	=	-I ./include -I ./libft
 LIBFT_LIB = libft/libft.a
 
-FILES = main init signal list_utils ft_echo ft_cd ft_pwd ft_export
-
+FILES = main init signal list_utils ft_echo ft_cd ft_pwd ft_export ft_env ft_unset \
+		ft_exit
+		
 SRCS	=	$(addprefix $(SRC_DIR), $(addsuffix .c, $(FILES)))
 OBJS	=	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(FILES)))
 
@@ -16,6 +17,8 @@ OBJF	=	.cache_exits
 $(OBJF) :
 	@mkdir -p $(OBJ_DIR)
 
+vpath %.c $(SRC_DIR) $(SRC_DIR)builtins $(SRC_DIR)utils $(SRC_DIR)parsing $(SRC_DIR)exec
+
 .PHONY: all clean fclean re
 
 all: ${NAME}
@@ -23,7 +26,7 @@ all: ${NAME}
 ${NAME}: ${OBJS} $(LIBFT_LIB)
 	cc $(CFLAGS) $(OBJS) $(LIBFT_LIB) -lreadline $(INCLUDE) -o $@
 
-$(OBJ_DIR)%.o : $(SRC_DIR)%.c | $(OBJF)
+$(OBJ_DIR)%.o : %.c Makefile | $(OBJF)
 	cc $(CFLAGS) $(INCLUDE) -c $< -o $@
 
 $(LIBFT_LIB):
