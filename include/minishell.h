@@ -20,7 +20,7 @@
 # define PIPE 5
 # define CMD 6
 # define ARG 7
-# define FILE 8
+// # define FILE 8
 
 # define ERR_MALLOC "malloc error\n"
 # define ERR_PIPE "pipe error\n"
@@ -38,6 +38,7 @@ typedef struct s_token
 
 typedef struct s_cmd
 {
+	bool			skip_cmd;
 	int				infile;
 	int				outfile;
 	char			**cmd_args;
@@ -76,5 +77,9 @@ void				print_list(t_list *list);
 void				free_list(t_list **list);
 char				*find_var(t_list **lst, char *str);
 t_list				*sort_list(t_list *list);
+
+// token
+void				create_tokens(t_data *data, char *line);
+void				print_tokens(t_token *list);
 
 #endif
