@@ -23,7 +23,6 @@
 // # define FILE 8
 
 # define ERR_MALLOC "malloc error\n"
-# define ERR_PIPE "pipe error\n"
 # define ERR_FORK "fork error\n"
 
 extern pid_t		g_signal;
@@ -79,7 +78,12 @@ char				*find_var(t_list **lst, char *str);
 t_list				*sort_list(t_list *list);
 
 // token
-void				create_tokens(t_data *data, char *line);
+void				create_token_list(t_data *data, char *line);
+
+// token_utils
+void				assign_words_type(t_token *token);
+void				copy_token(char *str, char *word, int len);
 void				print_tokens(t_token *list);
+void				append_token(t_token **tokken_list, char *str, int type);
 
 #endif

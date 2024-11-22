@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/20 19:19:19 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/22 16:26:33 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,9 +122,10 @@ int	main(int ac, char **av, char **env)
 		rl = readline("minishell > ");
 		if (rl == NULL)
 			break ;
-		create_tokens(&data, rl);
+		create_token_list(&data, rl);
 		print_tokens(data.tokens);
 		add_history(rl);
+		continue ;
 		args = ft_split(rl, ' ');
 		if (is_builtin(args[0]))
 			exec_builtin(&data, args[0], &args[1]);

@@ -6,52 +6,11 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:34:40 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/20 19:25:16 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/22 16:38:12 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_token	*new_tokken(char *str, int type)
-{
-	t_token	*new;
-
-	if (!str)
-		return (NULL);
-	new = malloc(sizeof(t_token));
-	if (!new)
-	{
-		free(str);
-		return (NULL);
-	}
-	new->str = str;
-	new->type = type;
-	new->next = NULL;
-	new->prev = NULL;
-	return (new);
-}
-
-void	append_token(t_token **tokken_list, char *str, int type)
-{
-	t_token	*new;
-
-	new = new_tokken(str, type);
-	if (!new)
-		return ;
-	if (!*tokken_list)
-	{
-		*tokken_list = new;
-		(*tokken_list)->next = *tokken_list;
-		(*tokken_list)->prev = *tokken_list;
-	}
-	else
-	{
-		new->prev = (*tokken_list)->prev;
-		new->next = (*tokken_list);
-		(*tokken_list)->prev->next = new;
-		(*tokken_list)->prev = new;
-	}
-}
 
 // ordre important d'abord les doubles
 int	is_operator(char *str)
@@ -69,11 +28,11 @@ int	is_operator(char *str)
 	return (0);
 }
 
-void	add_operator(t_token **token_list, char **str)
+void	add_operator(t_token **token_list, char **line)
 {
 	int	op;
 
-	op = is_operator(*str);
+	op = is_operator(*line);
 	if (!op)
 		return ;
 	if (op == INPUT)
@@ -87,37 +46,62 @@ void	add_operator(t_token **token_list, char **str)
 	else if (op == PIPE)
 		append_token(token_list, ft_strdup("|"), PIPE);
 	if (op == INPUT || op == TRUNC || op == PIPE)
-		(*str)++;
+		(*line)++;
 	else
-		*str += 2;
+		*line += 2;
 }
 
-void	create_tokens(t_data *data, char *line)
+int	word_len(char *str, int *quotes)
+{
+	int	i;
+
+	i = 0;
+	*quotes = 0;
+	while (str[i] && str[i] != ' ' && !is_operator(str + i))
+	{
+		if (str[i] == '"' || str[i] == '\'')
+		{
+			(*quotes)++;
+			i++;
+			while (str[i] && str[i] != '"' && str[i] != '\'')
+				i++;
+		}
+		if (str[i] && str[i] != ' ' && !is_operator(str + i))
+			i++;
+	}
+	return (i);
+}
+
+void	add_word(t_token **token_list, char **line)
+{
+	int		length;
+	int		quotes;
+	char	*word;
+
+	length = word_len(*line, &quotes);
+	if (!length)
+		return ;
+	word = malloc((length - quotes * 2) * sizeof(char));
+	if (!word)
+		return (print_error(ERR_MALLOC));
+	copy_token(*line, word, length);
+	append_token(token_list, word, 0);
+	*line += length - 1;
+}
+
+void	create_token_list(t_data *data, char *line)
 {
 	t_token	*token_head;
-	int		i;
 
 	token_head = NULL;
 	data->tokens = token_head;
-	i = 0;
 	while (*line)
 	{
 		while (*line == ' ')
 			line++;
 		add_operator(&data->tokens, &line);
+		add_word(&data->tokens, &line);
 		line++;
 	}
-}
-
-void	print_tokens(t_token *token)
-{
-	t_token	*head;
-
-	head = token;
-	while (token && token->next != head)
-	{
-		printf("%s\n", token->str);
-		token = token->next;
-	}
-	printf("%s\n", token->str);
+	assign_words_type(data->tokens);
 }
