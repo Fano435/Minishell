@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/22 16:26:33 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/22 17:41:46 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,8 @@ int	main(int ac, char **av, char **env)
 		if (rl == NULL)
 			break ;
 		create_token_list(&data, rl);
-		print_tokens(data.tokens);
+		// print_tokens(data.tokens);
+		create_cmd_list(&data, data.tokens);
 		add_history(rl);
 		continue ;
 		args = ft_split(rl, ' ');

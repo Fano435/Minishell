@@ -86,4 +86,11 @@ void				copy_token(char *str, char *word, int len);
 void				print_tokens(t_token *list);
 void				append_token(t_token **tokken_list, char *str, int type);
 
+// cmd
+void				create_cmd_list(t_data *data, t_token *token);
+
+// cmd_utils
+void				append_cmd(t_cmd **cmd_list, char **args, int infile,
+						int outfile);
+
 #endif

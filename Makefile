@@ -7,7 +7,7 @@ INCLUDE	=	-I ./include -I ./libft
 LIBFT_LIB = libft/libft.a
 
 FILES = main init signal list_utils ft_echo ft_cd ft_pwd ft_export ft_env ft_unset \
-		ft_exit token token_utils
+		ft_exit token token_utils create_cmd cmd_utils
 		
 SRCS	=	$(addprefix $(SRC_DIR), $(addsuffix .c, $(FILES)))
 OBJS	=	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(FILES)))

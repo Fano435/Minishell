@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:35:04 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/05/28 13:39:55 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/22 17:31:26 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,31 +24,3 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 	else
 		last->next = new;
 }
-
-/*void	print_list(t_list *lst)
-{
-	t_list	*tmp;
-
-	tmp = lst;
-	while (tmp)
-	{
-		printf("%s\n",(char *) tmp->content);
-		tmp = tmp->next;
-	}
-}
-
-int	main()
-{
-	t_list	*list = NULL;
-	t_list	*node;
-	int	i = 0;
-	char	*a = "HEY";
-
-	while (i < 6)
-	{
-		node = ft_lstnew((void*) a);
-		ft_lstadd_back(&list, node);
-		i++;
-	}
-	print_list(list);
-}*/

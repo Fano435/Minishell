@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:45:18 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/19 19:19:47 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/22 17:35:05 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,6 @@ void	init_data(int ac, char **av, char **env, t_data *data)
 	(void)ac;
 	(void)av;
 	copy_env(data, env);
+	data->cmds = NULL;
 	signals();
 }
