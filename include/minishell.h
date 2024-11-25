@@ -93,4 +93,8 @@ void				create_cmd_list(t_data *data, t_token *token);
 void				append_cmd(t_cmd **cmd_list, char **args, int infile,
 						int outfile);
 
+// cmd_args
+int					count_args(t_token **token);
+char				**get_cmd_args(t_token **token);
+
 #endif

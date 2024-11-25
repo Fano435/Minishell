@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:30:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/22 18:05:24 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/25 15:44:47 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,13 @@ void	free_cmds(t_cmd **list)
 
 void	print_cmd_list(t_cmd *list)
 {
+	int	i;
+
 	while (list)
 	{
-		printf("%s\n", *(list->cmd_args));
+		i = 0;
+		while (list->cmd_args[i])
+			printf("%s\n", list->cmd_args[i++]);
 		list = list->next;
 	}
 }
@@ -46,11 +50,13 @@ void	create_cmd_list(t_data *data, t_token *token)
 	while (token && token->next != head)
 	{
 		if (token->type == CMD)
-			append_cmd(&data->cmds, &(token->str), -2, -2);
+		{
+			append_cmd(&data->cmds, get_cmd_args(&token), -2, -2);
+		}
 		token = token->next;
 	}
 	if (token->type == CMD)
-		append_cmd(&data->cmds, &(token->str), -2, -2);
-	print_cmd_list(data->cmds);
+		append_cmd(&data->cmds, get_cmd_args(&token), -2, -2);
+	// print_cmd_list(data->cmds);
 	// free_cmds(&data->cmds);
 }

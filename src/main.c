@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/22 17:41:46 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/25 15:46:11 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,6 @@ void	exec_builtin(t_data *data, char *cmd, char **args)
 int	main(int ac, char **av, char **env)
 {
 	char	*rl;
-	char	**args;
 	int		pipe_fd[2];
 	t_data	data;
 
@@ -126,14 +125,14 @@ int	main(int ac, char **av, char **env)
 		// print_tokens(data.tokens);
 		create_cmd_list(&data, data.tokens);
 		add_history(rl);
-		continue ;
-		args = ft_split(rl, ' ');
-		if (is_builtin(args[0]))
-			exec_builtin(&data, args[0], &args[1]);
+		// continue ;
+		if (is_builtin(data.cmds->cmd_args[0]))
+			exec_builtin(&data, data.cmds->cmd_args[0],
+				&data.cmds->cmd_args[1]);
 		else
 		{
 			pipe(pipe_fd);
-			exec(args, pipe_fd);
+			exec(data.cmds->cmd_args, pipe_fd);
 			wait(NULL);
 		}
 		g_signal = 0;

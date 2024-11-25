@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:21:38 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/22 18:00:08 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/25 15:33:36 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,45 @@ void	append_cmd(t_cmd **cmd_list, char **args, int infile, int outfile)
 		*cmd_list = new;
 	else
 		last->next = new;
+}
+
+int	count_args(t_token **token)
+{
+	t_token	*tmp;
+	int		i;
+
+	i = 1;
+	tmp = (*token)->next;
+	while (tmp && tmp->type == ARG)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
+}
+
+char	**get_cmd_args(t_token **token)
+{
+	char	**args;
+	int		len;
+	int		i;
+
+	i = 0;
+	len = count_args(token);
+	args = malloc((len + 1) * sizeof(char *));
+	if (!args)
+		return (NULL);
+	while ((*token) && i < len)
+	{
+		args[i] = ft_strdup((*token)->str);
+		if (!args[i])
+		{
+			ft_free_tab(args);
+			return (NULL);
+		}
+		*token = (*token)->next;
+		i++;
+	}
+	args[i] = NULL;
+	return (args);
 }
