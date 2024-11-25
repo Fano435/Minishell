@@ -40,7 +40,7 @@ typedef struct s_cmd
 	bool			skip_cmd;
 	int				infile;
 	int				outfile;
-	char			**cmd_args;
+	char			**cmd_params;
 	struct s_cmd	*next;
 }					t_cmd;
 
@@ -94,7 +94,10 @@ void				append_cmd(t_cmd **cmd_list, char **args, int infile,
 						int outfile);
 
 // cmd_args
-int					count_args(t_token **token);
-char				**get_cmd_args(t_token **token);
+int					count_params(t_token **token);
+char				**get_cmd_params(t_token **token);
+
+// exec
+void				exec_pipeline(t_data *data);
 
 #endif

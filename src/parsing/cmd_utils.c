@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:21:38 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/25 15:33:36 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/25 16:21:26 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,13 @@ t_cmd	*new_cmd(char **args, int infile, int outfile)
 		free(args);
 		return (NULL);
 	}
+	// if (!infile)
+	// 	new->skip_cmd = true;
+	// else
 	new->skip_cmd = false;
 	new->infile = infile;
 	new->outfile = outfile;
-	new->cmd_args = args;
+	new->cmd_params = args;
 	new->next = NULL;
 	return (new);
 }
@@ -59,7 +62,7 @@ void	append_cmd(t_cmd **cmd_list, char **args, int infile, int outfile)
 		last->next = new;
 }
 
-int	count_args(t_token **token)
+int	count_params(t_token **token)
 {
 	t_token	*tmp;
 	int		i;
@@ -74,28 +77,28 @@ int	count_args(t_token **token)
 	return (i);
 }
 
-char	**get_cmd_args(t_token **token)
+char	**get_cmd_params(t_token **token)
 {
-	char	**args;
+	char	**params;
 	int		len;
 	int		i;
 
 	i = 0;
-	len = count_args(token);
-	args = malloc((len + 1) * sizeof(char *));
-	if (!args)
+	len = count_params(token);
+	params = malloc((len + 1) * sizeof(char *));
+	if (!params)
 		return (NULL);
 	while ((*token) && i < len)
 	{
-		args[i] = ft_strdup((*token)->str);
-		if (!args[i])
+		params[i] = ft_strdup((*token)->str);
+		if (!params[i])
 		{
-			ft_free_tab(args);
+			ft_free_tab(params);
 			return (NULL);
 		}
 		*token = (*token)->next;
 		i++;
 	}
-	args[i] = NULL;
-	return (args);
+	params[i] = NULL;
+	return (params);
 }
