@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:45:18 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/25 17:25:05 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:34:19 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	init_data(int ac, char **av, char **env, t_data *data)
 	(void)ac;
 	(void)av;
 	copy_env(data, env);
+	data->tokens = NULL;
 	data->cmds = NULL;
 	data->exit_code = 0;
 	data->pipe[0] = -1;

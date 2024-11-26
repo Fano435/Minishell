@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:34:40 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/22 16:38:12 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/26 16:12:48 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	add_word(t_token **token_list, char **line)
 	length = word_len(*line, &quotes);
 	if (!length)
 		return ;
-	word = malloc((length - quotes * 2) * sizeof(char));
+	word = malloc((length - quotes * 2 + 1) * sizeof(char));
 	if (!word)
 		return (print_error(ERR_MALLOC));
 	copy_token(*line, word, length);

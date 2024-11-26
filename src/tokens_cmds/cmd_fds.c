@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:52:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/25 18:44:01 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/26 18:06:44 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,18 @@ int	open_outfile(t_data *data, char *file, int type)
 	int	out;
 
 	out = -1;
-	if (access(file, W_OK) != 0)
-		perror(file);
+	(void)data;
+	if (type == PIPE)
+	{
+		// printf("%d\n", data->pipe[1]);
+		return (out);
+	}
 	if (type == TRUNC)
 		out = open(file, O_WRONLY | O_CREAT | O_TRUNC);
 	if (type == APPEND)
 		out = open(file, O_WRONLY | O_CREAT | O_APPEND);
-	if (type == PIPE)
-		out = data->pipe[1];
+	if (access(file, W_OK) != 0)
+		perror(file);
 	// if (out >= 0)
 	// {
 	// 	dup2(out, STDOUT_FILENO);
@@ -61,15 +65,21 @@ int	open_outfile(t_data *data, char *file, int type)
 	return (out);
 }
 
-void	fill_fds(t_data *data, t_cmd *cmd, t_token **tokken)
+void	get_outfile(t_data *data, t_token **token)
 {
 	t_token	*tmp;
+	t_cmd	*cmd;
 
-	tmp = *tokken;
+	cmd = ft_cmdlast(data->cmds);
+	tmp = *token;
 	while (tmp && tmp->next->type == ARG)
 		tmp = tmp->next;
-	if (!tmp->next)
-		cmd->outfile = STDOUT_FILENO;
-	else
-		cmd->outfile = open_outfile(data, tmp->next->str, tmp->next->type);
+	// printf("%s\n", tmp->str);
+	// printf("%s\n", data->tokens->str);
+	printf("%s\n", *cmd->cmd_params);
+	if (cmd && tmp != data->tokens)
+	{
+		printf("%d\n", open_outfile(data, tmp->next->str, tmp->type));
+		cmd->outfile = open_outfile(data, tmp->next->str, tmp->type);
+	}
 }

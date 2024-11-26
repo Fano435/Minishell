@@ -92,12 +92,40 @@ void				create_cmd_list(t_data *data, t_token *token);
 // cmd_utils
 void				append_cmd(t_cmd **cmd_list, char **args, int infile,
 						int outfile);
+void				print_cmd_list(t_cmd *list);
+t_cmd				*ft_cmdlast(t_cmd *lst);
 
 // cmd_args
 int					count_params(t_token **token);
 char				**get_cmd_params(t_token **token);
+void				get_outfile(t_data *data, t_token **tokken);
 
 // exec
 void				exec_pipeline(t_data *data);
+
+// utils.c
+int					skip_to_quotes(char *str, int i, char c);
+int					check_closed_quotes(char *str);
+int					advance(char *str, int i, char c);
+char				*handle_dollar(char *str, char *substr, int *i);
+
+// parsing_utils.c
+void				handle_exit_status(int *i);
+char				*handle_var_env_no_quotes(char *str, char *str_no_quotes,
+						int *i);
+char				*handle_char_no_quotes(char *str, char *str_no_quotes,
+						int *i);
+char				*handle_var_env_db_quotes(char *str, char *str_db_quotes,
+						int *i);
+char				*handle_char_db_quotes(char *str, char *str_db_quotes,
+						int *i);
+
+// parsing.c
+char				*parse_sing_quotes(char *str, int i);
+char				*parse_db_quotes(char *str, int i);
+char				*parse_no_quotes(char *str, int i);
+char				*update_str_parsed(char *(*parser)(char *, int), char *str,
+						char *str_parsed, int i);
+char				*parse_rl(char *str);
 
 #endif

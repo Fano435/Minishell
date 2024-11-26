@@ -6,25 +6,11 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:30:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/25 16:17:39 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/26 18:04:49 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// Ebauche de free
-void	free_cmds(t_cmd **list)
-{
-	t_cmd	*tmp;
-
-	while (*list)
-	{
-		tmp = (*list)->next;
-		ft_free_tab(tmp->cmd_params);
-		*list = tmp;
-	}
-	list = NULL;
-}
 
 void	print_cmd_list(t_cmd *list)
 {
@@ -44,6 +30,8 @@ void	create_cmd_list(t_data *data, t_token *token)
 	t_token	*head;
 	t_cmd	*cmd;
 
+	if (!token)
+		return ;
 	cmd = NULL;
 	data->cmds = cmd;
 	head = token;
@@ -52,11 +40,14 @@ void	create_cmd_list(t_data *data, t_token *token)
 		if (token->type == CMD)
 		{
 			append_cmd(&data->cmds, get_cmd_params(&token), -2, -2);
+			// get_outfile(data, &token);
+			// printf("%d\n", cmd->outfile);
 		}
 		token = token->next;
 	}
 	if (token->type == CMD)
+	{
 		append_cmd(&data->cmds, get_cmd_params(&token), -2, -2);
-	// print_cmd_list(data->cmds);
-	// free_cmds(&data->cmds);
+		// get_outfile(data, cmd, &token);
+	}
 }

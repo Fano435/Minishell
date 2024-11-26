@@ -7,7 +7,7 @@ INCLUDE	=	-I ./include -I ./libft
 LIBFT_LIB = libft/libft.a
 
 FILES = main init signal list_utils ft_echo ft_cd ft_pwd ft_export ft_env ft_unset \
-		ft_exit token token_utils create_cmd cmd_utils cmd_fds exec
+		ft_exit token token_utils create_cmd cmd_utils cmd_fds exec parsing parsing_utils utils
 		
 SRCS	=	$(addprefix $(SRC_DIR), $(addsuffix .c, $(FILES)))
 OBJS	=	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(FILES)))
@@ -17,7 +17,7 @@ OBJF	=	.cache_exits
 $(OBJF) :
 	@mkdir -p $(OBJ_DIR)
 
-vpath %.c $(SRC_DIR) $(SRC_DIR)builtins $(SRC_DIR)utils $(SRC_DIR)parsing $(SRC_DIR)exec
+vpath %.c $(SRC_DIR) $(SRC_DIR)builtins $(SRC_DIR)utils $(SRC_DIR)parsing $(SRC_DIR)tokens_cmds
 
 .PHONY: all clean fclean re
 

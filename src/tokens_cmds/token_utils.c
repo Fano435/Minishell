@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:52:12 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/22 16:58:58 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:55:02 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	assign_words_type(t_token *token)
 {
 	t_token	*head;
 
+	if (!token)
+		return ;
 	head = token;
 	if (!token->type)
 	{
@@ -43,6 +45,8 @@ void	print_tokens(t_token *token)
 {
 	t_token	*head;
 
+	if (!token)
+		return ;
 	head = token;
 	while (token && token->next != head)
 	{

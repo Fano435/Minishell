@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:21:38 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/25 16:21:26 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/26 17:53:41 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,6 @@ t_cmd	*new_cmd(char **args, int infile, int outfile)
 		free(args);
 		return (NULL);
 	}
-	// if (!infile)
-	// 	new->skip_cmd = true;
-	// else
 	new->skip_cmd = false;
 	new->infile = infile;
 	new->outfile = outfile;
