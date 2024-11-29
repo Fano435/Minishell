@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:55:33 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/29 18:09:22 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/29 18:18:00 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,13 +80,20 @@ void	exec_last(t_data *data, t_cmd *cmd, int input_fd)
 {
 	if (fork() == 0)
 	{
+		if (cmd->infile != NO_FD)
+		{
+			dup2(cmd->infile, STDIN_FILENO);
+			if (cmd != data->cmds)
+				close(cmd->infile);
+		}
 		if (cmd->outfile != NO_FD)
 		{
 			dup2(cmd->outfile, STDOUT_FILENO);
 			close(cmd->outfile);
 		}
 		dup2(input_fd, STDIN_FILENO);
-		close(input_fd);
+		if (input_fd != STDIN_FILENO)
+			close(input_fd);
 		exec(data, cmd);
 		exit(EXIT_FAILURE);
 	}

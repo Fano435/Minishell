@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:52:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/29 17:54:25 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/29 18:19:55 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,15 @@ int	open_file(char *file, int type)
 	}
 	if (type == TRUNC)
 	{
+		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 		if (access(file, W_OK) != 0)
 			perror(file);
-		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	}
 	if (type == APPEND)
 	{
+		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0777);
 		if (access(file, W_OK) != 0)
 			perror(file);
-		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	}
 	return (fd);
 }
