@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:21:38 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/26 17:53:41 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/27 15:51:03 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,26 +74,29 @@ int	count_params(t_token **token)
 	return (i);
 }
 
-char	**get_cmd_params(t_token **token)
+char	**get_cmd_params(t_data *data, t_token **token)
 {
 	char	**params;
+	t_token	*current;
 	int		len;
 	int		i;
 
+	current = *token;
+	(void)data;
 	i = 0;
 	len = count_params(token);
 	params = malloc((len + 1) * sizeof(char *));
 	if (!params)
 		return (NULL);
-	while ((*token) && i < len)
+	while (current && i < len)
 	{
-		params[i] = ft_strdup((*token)->str);
+		params[i] = ft_strdup(current->str);
 		if (!params[i])
 		{
 			ft_free_tab(params);
 			return (NULL);
 		}
-		*token = (*token)->next;
+		current = current->next;
 		i++;
 	}
 	params[i] = NULL;

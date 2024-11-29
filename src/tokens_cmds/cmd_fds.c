@@ -6,63 +6,38 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:52:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/26 18:06:44 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:54:25 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	open_infile(char *file)
+int	open_file(char *file, int type)
 {
-	int	in;
+	int	fd;
 
-	in = -1;
-	if (access(file, R_OK) != 0)
-		perror(file);
-	in = open(file, O_RDONLY);
-	// if (in >= 0)
-	// {
-	// 	dup2(in, STDIN_FILENO);
-	// 	close(in);
-	// }
-	return (in);
-}
-
-int	get_infile(t_data *data, t_token **token)
-{
-	t_token	*tmp;
-
-	tmp = (*token)->prev;
-	if (tmp->type == INPUT)
-		return (open_infile(tmp->prev->str));
-	if (tmp->type == PIPE)
-		return (data->pipe[0]);
-	return (0);
-}
-
-int	open_outfile(t_data *data, char *file, int type)
-{
-	int	out;
-
-	out = -1;
-	(void)data;
+	fd = NO_FD;
 	if (type == PIPE)
+		return (fd);
+	if (type == INPUT)
 	{
-		// printf("%d\n", data->pipe[1]);
-		return (out);
+		if (access(file, R_OK) != 0)
+			perror(file);
+		fd = open(file, O_RDONLY);
 	}
 	if (type == TRUNC)
-		out = open(file, O_WRONLY | O_CREAT | O_TRUNC);
+	{
+		if (access(file, W_OK) != 0)
+			perror(file);
+		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	}
 	if (type == APPEND)
-		out = open(file, O_WRONLY | O_CREAT | O_APPEND);
-	if (access(file, W_OK) != 0)
-		perror(file);
-	// if (out >= 0)
-	// {
-	// 	dup2(out, STDOUT_FILENO);
-	// 	close(out);
-	// }
-	return (out);
+	{
+		if (access(file, W_OK) != 0)
+			perror(file);
+		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0777);
+	}
+	return (fd);
 }
 
 void	get_outfile(t_data *data, t_token **token)
@@ -74,12 +49,28 @@ void	get_outfile(t_data *data, t_token **token)
 	tmp = *token;
 	while (tmp && tmp->next->type == ARG)
 		tmp = tmp->next;
-	// printf("%s\n", tmp->str);
-	// printf("%s\n", data->tokens->str);
-	printf("%s\n", *cmd->cmd_params);
-	if (cmd && tmp != data->tokens)
+	if (tmp->next != data->tokens && (tmp->next->type == TRUNC
+			|| tmp->next->type == APPEND))
 	{
-		printf("%d\n", open_outfile(data, tmp->next->str, tmp->type));
-		cmd->outfile = open_outfile(data, tmp->next->str, tmp->type);
+		tmp = tmp->next;
+		cmd->outfile = open_file(tmp->next->str, tmp->type);
+		if (cmd->outfile == ERR_FILE_OPEN)
+			cmd->skip_cmd = true;
+	}
+}
+
+void	get_infile(t_data *data, t_token **token)
+{
+	t_token	*tmp;
+	t_cmd	*cmd;
+
+	cmd = ft_cmdlast(data->cmds);
+	tmp = *token;
+	if (tmp->next->type == INPUT || tmp->next->type == HEREDOC)
+	{
+		tmp = tmp->next;
+		cmd->infile = open_file(tmp->next->str, tmp->type);
+		if (cmd->outfile == ERR_FILE_OPEN)
+			cmd->skip_cmd = true;
 	}
 }

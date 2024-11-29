@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:34:40 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/26 16:12:48 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/29 14:27:33 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ void	create_token_list(t_data *data, char *line)
 {
 	t_token	*token_head;
 
+	if (!line)
+		return ;
 	token_head = NULL;
 	data->tokens = token_head;
 	while (*line)

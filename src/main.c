@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/26 18:16:23 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/29 18:13:16 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,25 @@ void	free_env(t_list **list)
 	while (*list)
 	{
 		tmp = (*list)->next;
+		free((*list)->content);
 		free((*list));
 		*list = tmp;
 	}
 	list = NULL;
+}
+
+void	wait_all(t_data *data)
+{
+	t_cmd	*cmd;
+	int		i;
+
+	i = 0;
+	cmd = data->cmds;
+	while (cmd)
+	{
+		wait(NULL);
+		cmd = cmd->next;
+	}
 }
 
 int	main(int ac, char **av, char **env)
@@ -124,24 +139,21 @@ int	main(int ac, char **av, char **env)
 		rl = readline("minishell > ");
 		if (rl == NULL)
 			break ;
-		parsed = parse_rl(rl);
-		// printf("%s\n", parse_rl(rl));
+		parsed = parse_rl(rl, &data);
 		create_token_list(&data, parsed);
 		create_cmd_list(&data, data.tokens);
 		// print_tokens(data.tokens);
-		// print_cmd_list(data.cmds);
+		print_cmd_list(data.cmds);
 		add_history(rl);
-		if (is_builtin(data.cmds->cmd_params[0]))
-			exec_builtin(&data, data.cmds->cmd_params[0],
-				&data.cmds->cmd_params[1]);
-		else
-		{
-			exec_pipeline(&data);
-			wait(NULL);
-		}
+		// if (is_builtin(data.cmds->cmd_params[0]))
+		// 	exec_builtin(&data, data.cmds->cmd_params[0],
+		// 		&data.cmds->cmd_params[1]);
+		// exec_pipeline(&data);
+		// wait_all(&data);
 		g_signal = 0;
 		free_tokens(&data.tokens);
 		free_cmds(&data.cmds);
+		free(parsed);
 	}
 	rl_clear_history();
 	free_env(&data.env);

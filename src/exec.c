@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:55:33 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/25 18:53:35 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/29 18:09:22 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void	exec_last(t_data *data, t_cmd *cmd, int input_fd)
 {
 	if (fork() == 0)
 	{
-		if (cmd->outfile != -1)
+		if (cmd->outfile != NO_FD)
 		{
 			dup2(cmd->outfile, STDOUT_FILENO);
 			close(cmd->outfile);
@@ -90,7 +90,6 @@ void	exec_last(t_data *data, t_cmd *cmd, int input_fd)
 		exec(data, cmd);
 		exit(EXIT_FAILURE);
 	}
-	close(input_fd);
 }
 
 void	exec_pipeline(t_data *data)
@@ -102,29 +101,42 @@ void	exec_pipeline(t_data *data)
 	input_fd = 0;
 	pipe_fd = data->pipe;
 	cmd = data->cmds;
-	while (cmd && cmd->next)
+	while (cmd)
 	{
+		if (!cmd->next)
+		{
+			exec_last(data, cmd, input_fd);
+			break ;
+		}
 		pipe(pipe_fd);
 		if (fork() == 0)
 		{
-			if (cmd->infile != -1)
+			if (cmd->infile != NO_FD)
 			{
 				dup2(cmd->infile, STDIN_FILENO);
-				close(cmd->infile);
+				if (cmd != data->cmds)
+					close(cmd->infile);
 			}
-			if (cmd->outfile != -1)
+			else
+				dup2(input_fd, STDIN_FILENO);
+			if (cmd->outfile != NO_FD)
 			{
 				dup2(cmd->outfile, STDOUT_FILENO);
 				close(cmd->outfile);
 			}
+			else if (cmd->next)
+				dup2(pipe_fd[1], STDOUT_FILENO);
 			close(pipe_fd[0]);
 			close(pipe_fd[1]);
+			if (input_fd != STDIN_FILENO)
+				close(input_fd);
 			exec(data, cmd);
 			exit(EXIT_FAILURE);
 		}
 		close(pipe_fd[1]);
+		if (input_fd != STDIN_FILENO)
+			close(input_fd);
 		input_fd = pipe_fd[0];
 		cmd = cmd->next;
 	}
-	exec_last(data, cmd, input_fd);
 }

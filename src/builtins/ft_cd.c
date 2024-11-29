@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 17:31:26 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/19 19:14:05 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/27 17:55:52 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ static void	update_wd(t_data *data, char *var)
 		}
 		if (!pwd)
 			return (print_error(ERR_MALLOC));
+		free(tmp->content);
 		tmp->content = pwd;
 	}
 }
@@ -68,6 +69,8 @@ void	ft_cd(t_data *data, char **args)
 	if (!path)
 		return ;
 	g_signal = chdir(path);
+	if (path != args[0])
+		free(path);
 	if (g_signal == -1)
 	{
 		perror("cd");

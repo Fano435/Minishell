@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:52:12 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/26 15:55:02 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:37:36 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,17 @@ void	assign_words_type(t_token *token)
 	}
 	while (token && token->next != head)
 	{
-		if (!token->type && (token->prev->type == INPUT
-				|| token->prev->type == PIPE))
+		// if (!token->type && (token->next->type == INPUT
+		// 		|| token->next->type == HEREDOC))
+		// 	token->type = CMD;
+		if (!token->type && token->prev->type == PIPE)
 			token->type = CMD;
 		if (!token->type && (token->prev->type == CMD
 				|| token->prev->type == ARG))
 			token->type = ARG;
 		token = token->next;
 	}
-	if (!token->type && (token->prev->type == INPUT
-			|| token->prev->type == PIPE))
+	if (!token->type && token->prev->type == PIPE)
 		token->type = CMD;
 	if (!token->type && (token->prev->type == CMD || token->prev->type == ARG))
 		token->type = ARG;

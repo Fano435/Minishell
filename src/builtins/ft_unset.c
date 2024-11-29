@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 14:32:19 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/18 15:00:23 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:04:30 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	delete_node(t_list **env, int pos)
 	{
 		tmp = curr;
 		curr = curr->next;
+		free(tmp->content);
 		free(tmp);
 		return ;
 	}
@@ -34,6 +35,7 @@ void	delete_node(t_list **env, int pos)
 	}
 	tmp = curr->next;
 	curr->next = curr->next->next;
+	free(tmp->content);
 	free(tmp);
 }
 

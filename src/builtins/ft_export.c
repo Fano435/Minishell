@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:45:35 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/18 14:43:35 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:00:39 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void	ft_export(t_data *data, char **args)
 			update_env(&data->env, pos, *args);
 		else if (pos == -1)
 		{
-			new_var = ft_lstnew(ft_strdup(*args));
+			new_var = ft_lstnew(*args);
 			if (!new_var)
 			{
 				print_error(ERR_MALLOC);
