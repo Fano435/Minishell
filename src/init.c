@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:45:18 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/26 15:34:19 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:23:53 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,5 @@ void	init_data(int ac, char **av, char **env, t_data *data)
 	data->tokens = NULL;
 	data->cmds = NULL;
 	data->exit_code = 0;
-	data->pipe[0] = -1;
-	data->pipe[1] = -1;
 	signals();
 }

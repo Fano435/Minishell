@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 16:02:02 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/13 16:55:16 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:30:53 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,24 +41,24 @@ int	check_newline(char *arg)
 	return (0);
 }
 
-void	ft_echo(char **args)
+void	ft_echo(char **params)
 {
 	int	newline;
 	int	i;
 	int	len;
 
 	newline = 1;
-	len = ft_tablen(args);
-	i = 0;
-	while (args[i] && check_newline(args[i]))
+	i = 1;
+	len = ft_tablen(params) - 1;
+	while (params[i] && check_newline(params[i]))
 	{
 		newline = 0;
 		i++;
 	}
-	while (args[i])
+	while (params[i])
 	{
-		write(1, args[i], ft_strlen(args[i]));
-		if (i != len - 1)
+		write(1, params[i], ft_strlen(params[i]));
+		if (i != len)
 			write(1, " ", 2);
 		i++;
 	}

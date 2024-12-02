@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 17:31:26 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/27 17:55:52 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:35:37 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,22 +54,22 @@ static void	update_wd(t_data *data, char *var)
 	}
 }
 
-void	ft_cd(t_data *data, char **args)
+void	ft_cd(t_data *data, char **params)
 {
 	char	*path;
 
-	if (args[0] && args[1])
+	if (ft_tablen(params) > 2)
 	{
 		data->exit_code = 1;
 		return (print_error("Too many arguments\n"));
 	}
-	path = args[0];
+	path = params[1];
 	if (path == NULL)
 		path = get_var_value(find_var(&data->env, "HOME"));
 	if (!path)
 		return ;
 	g_signal = chdir(path);
-	if (path != args[0])
+	if (path != params[1])
 		free(path);
 	if (g_signal == -1)
 	{

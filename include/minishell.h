@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/02 17:57:43 by jrasamim          #+#    #+#             */
+/*   Updated: 2024/12/02 18:01:31 by jrasamim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -52,8 +64,10 @@ typedef struct s_data
 	t_token			*tokens;
 	t_cmd			*cmds;
 	int				exit_code;
-	int				pipe[2];
+
 }					t_data;
+
+int					ft_tablen(char **tab);
 
 void				print_error(char *str);
 void				signals(void);
@@ -68,6 +82,9 @@ void				ft_export(t_data *data, char **args);
 void				ft_unset(t_data *data, char **args);
 void				ft_env(t_data *data);
 void				ft_exit(t_data *data, char **args);
+bool				is_builtin(char *cmd);
+void				builtin(t_data *data, t_cmd *cmd, int input_fd,
+						int output_fd);
 
 // builtins_utils
 int					var_pos(t_list *env, char *var);
@@ -97,7 +114,7 @@ void				append_cmd(t_cmd **cmd_list, char **args, int infile,
 void				print_cmd_list(t_cmd *list);
 t_cmd				*ft_cmdlast(t_cmd *lst);
 
-// cmd_args
+// cmd_params
 int					count_params(t_token **token);
 char				**get_cmd_params(t_data *data, t_token **token);
 void				get_outfile(t_data *data, t_token **tokken);
@@ -105,6 +122,9 @@ void				get_infile(t_data *data, t_token **token);
 
 // exec
 void				exec_pipeline(t_data *data);
+void				exec(t_data *data, t_cmd *cmd);
+void				cmd_redirections(t_data *data, t_cmd *cmd, int input_fd,
+						int pipe_fd);
 
 // utils.c
 int					skip_to_quotes(char *str, int i, char c);

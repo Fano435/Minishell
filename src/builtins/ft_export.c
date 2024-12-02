@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:45:35 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/27 18:00:39 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/02 17:04:51 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,20 @@ int	var_pos(t_list *env, char *var)
 {
 	int		size;
 	int		i;
+	char	*content;
 	t_list	*tmp;
 
 	if (!env)
 		return (-1);
-	size = 0;
-	while (var[size] && var[size] != '=')
-		size++;
 	tmp = env;
 	i = 0;
 	while (tmp)
 	{
-		if (ft_strncmp(tmp->content, var, size) == 0)
+		size = 0;
+		content = (char *)tmp->content;
+		while (content[size] && content[size] != '=')
+			size++;
+		if (ft_strncmp(content, var, size) == 0 && var[size] == '\0')
 			return (i);
 		tmp = tmp->next;
 		i++;
@@ -92,29 +94,27 @@ void	update_env(t_list **env, int pos, char *value)
 	tmp->content = ft_strdup(value);
 }
 
-// Reste a recuperer le parsing pour correctement stocker les variables
-// dans le format NOM=VALEUR, en traitant bien les quotes
-
-void	ft_export(t_data *data, char **args)
+void	ft_export(t_data *data, char **params)
 {
 	int		pos;
 	t_list	*new_var;
 
-	if (!args || !args[0])
+	if (!params[1])
 		return (export_no_args(data));
-	while (*args)
+	params++;
+	while (*params)
 	{
-		pos = var_pos(data->env, *args);
-		if (!valid_identifier(*args))
+		pos = var_pos(data->env, *params);
+		if (!valid_identifier(*params))
 		{
 			print_error("not a valid identifier\n");
 			data->exit_code = 1;
 		}
 		else if (pos >= 0)
-			update_env(&data->env, pos, *args);
+			update_env(&data->env, pos, *params);
 		else if (pos == -1)
 		{
-			new_var = ft_lstnew(*args);
+			new_var = ft_lstnew(*params);
 			if (!new_var)
 			{
 				print_error(ERR_MALLOC);
@@ -123,6 +123,6 @@ void	ft_export(t_data *data, char **args)
 			}
 			ft_lstadd_back(&data->env, new_var);
 		}
-		args++;
+		params++;
 	}
 }

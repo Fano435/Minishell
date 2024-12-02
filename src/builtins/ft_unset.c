@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 14:32:19 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/27 18:04:30 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/02 16:48:01 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,18 @@ void	delete_node(t_list **env, int pos)
 	free(tmp);
 }
 
-void	ft_unset(t_data *data, char **args)
+void	ft_unset(t_data *data, char **params)
 {
 	int	pos;
 
-	while (*args)
+	if (params[1])
+		params++;
+	while (*params)
 	{
-		pos = var_pos(data->env, *args);
+		pos = var_pos(data->env, *params);
 		if (pos != -1)
 			delete_node(&data->env, pos);
-		args++;
+		params++;
 	}
 	data->exit_code = 0;
 }
