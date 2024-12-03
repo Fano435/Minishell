@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/03 20:08:37 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:36:07 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int	main(int ac, char **av, char **env)
 		// print_tokens(data.tokens);
 		// print_cmd_list(data.cmds);
 		exec_pipeline(&data);
-		printf("%d\n", data.exit_code);
+		// printf("%d\n", data.exit_code);
 		g_signal = 0;
 		free_tokens(&data.tokens);
 		free_cmds(&data.cmds);
