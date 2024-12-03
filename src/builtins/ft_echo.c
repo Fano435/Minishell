@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 16:02:02 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/02 16:30:53 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:46:40 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	check_newline(char *arg)
 	return (0);
 }
 
-void	ft_echo(char **params)
+int	ft_echo(char **params)
 {
 	int	newline;
 	int	i;
@@ -64,4 +64,5 @@ void	ft_echo(char **params)
 	}
 	if (newline)
 		write(1, "\n", 2);
+	return (0);
 }

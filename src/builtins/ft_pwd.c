@@ -6,13 +6,13 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 18:31:14 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/02 17:03:40 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:49:38 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_pwd(t_data *data)
+int	ft_pwd(t_data *data)
 {
 	char	cwd[PATH_MAX];
 
@@ -23,12 +23,11 @@ void	ft_pwd(t_data *data)
 	// 	printf("%s\n", cwd);
 	// 	free(cwd);
 	// }
+	(void)data;
 	if (getcwd(cwd, PATH_MAX))
 	{
 		printf("%s\n", cwd);
+		return (0);
 	}
-	else
-	{
-		data->exit_code = 1;
-	}
+	return (1);
 }

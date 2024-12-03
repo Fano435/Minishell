@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:55:33 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/02 17:55:32 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:32:37 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,5 @@ void	exec_pipeline(t_data *data)
 		input_fd = pipe_fd[0];
 		cmd = cmd->next;
 	}
+	wait_all(data);
 }

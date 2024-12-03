@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 17:31:26 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/02 16:35:37 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/03 19:43:06 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,28 +54,29 @@ static void	update_wd(t_data *data, char *var)
 	}
 }
 
-void	ft_cd(t_data *data, char **params)
+int	ft_cd(t_data *data, char **params)
 {
 	char	*path;
 
 	if (ft_tablen(params) > 2)
 	{
-		data->exit_code = 1;
-		return (print_error("Too many arguments\n"));
+		print_error("Too many arguments\n");
+		return (1);
 	}
 	path = params[1];
 	if (path == NULL)
 		path = get_var_value(find_var(&data->env, "HOME"));
 	if (!path)
-		return ;
+		return (1);
 	g_signal = chdir(path);
 	if (path != params[1])
 		free(path);
 	if (g_signal == -1)
 	{
 		perror("cd");
-		return ;
+		return (1);
 	}
 	update_wd(data, "OLDPWD=");
 	update_wd(data, "PWD=");
+	return (0);
 }

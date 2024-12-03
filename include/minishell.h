@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:57:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/02 18:01:31 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:25:00 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 
@@ -35,6 +36,9 @@
 # define PIPE 5
 # define CMD 6
 # define ARG 7
+
+# define CMD_NOT_FOUND 127
+# define CMD_NO_EXEC 126
 
 # define ERR_MALLOC "malloc error\n"
 # define ERR_FORK "fork error\n"
@@ -73,15 +77,16 @@ void				print_error(char *str);
 void				signals(void);
 char				*header_prompt(void);
 void				init_data(int ac, char **av, char **env, t_data *data);
+void				wait_all(t_data *data);
 
 // builtins
-void				ft_echo(char **args);
-void				ft_cd(t_data *data, char **args);
-void				ft_pwd(t_data *data);
-void				ft_export(t_data *data, char **args);
-void				ft_unset(t_data *data, char **args);
-void				ft_env(t_data *data);
-void				ft_exit(t_data *data, char **args);
+int					ft_echo(char **args);
+int					ft_cd(t_data *data, char **args);
+int					ft_pwd(t_data *data);
+int					ft_export(t_data *data, char **args);
+int					ft_unset(t_data *data, char **args);
+int					ft_env(t_data *data);
+int					ft_exit(t_data *data, char **args);
 bool				is_builtin(char *cmd);
 void				builtin(t_data *data, t_cmd *cmd, int input_fd,
 						int output_fd);
@@ -89,6 +94,7 @@ void				builtin(t_data *data, t_cmd *cmd, int input_fd,
 // builtins_utils
 int					var_pos(t_list *env, char *var);
 char				*get_var_value(char *var);
+bool				valid_identifier(char *str);
 
 // list_utils
 void				print_list(t_list *list);

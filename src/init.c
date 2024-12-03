@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:45:18 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/02 17:23:53 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:12:02 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ char	*get_var_value(char *var)
 	i = 0;
 	if (!var || !ft_strchr(var, '='))
 	{
-		print_error("HOME not set\n");
+		// print_error("HOME not set\n");
 		return (NULL);
 	}
 	while (var[i] && var[i] != '=')

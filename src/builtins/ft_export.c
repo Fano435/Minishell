@@ -6,13 +6,13 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:45:35 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/02 17:04:51 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/03 20:23:45 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	valid_identifier(char *str)
+bool	valid_identifier(char *str)
 {
 	int	i;
 
@@ -94,13 +94,18 @@ void	update_env(t_list **env, int pos, char *value)
 	tmp->content = ft_strdup(value);
 }
 
-void	ft_export(t_data *data, char **params)
+int	ft_export(t_data *data, char **params)
 {
 	int		pos;
+	int		code;
 	t_list	*new_var;
 
 	if (!params[1])
-		return (export_no_args(data));
+	{
+		export_no_args(data);
+		return (0);
+	}
+	code = 0;
 	params++;
 	while (*params)
 	{
@@ -108,7 +113,7 @@ void	ft_export(t_data *data, char **params)
 		if (!valid_identifier(*params))
 		{
 			print_error("not a valid identifier\n");
-			data->exit_code = 1;
+			code = 1;
 		}
 		else if (pos >= 0)
 			update_env(&data->env, pos, *params);
@@ -118,11 +123,11 @@ void	ft_export(t_data *data, char **params)
 			if (!new_var)
 			{
 				print_error(ERR_MALLOC);
-				data->exit_code = 1;
-				break ;
+				return (1);
 			}
 			ft_lstadd_back(&data->env, new_var);
 		}
 		params++;
 	}
+	return (code);
 }
