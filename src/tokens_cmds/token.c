@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:34:40 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/29 14:27:33 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:34:00 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,16 +57,25 @@ int	word_len(char *str, int *quotes)
 
 	i = 0;
 	*quotes = 0;
-	while (str[i] && str[i] != ' ' && !is_operator(str + i))
+	if (str[i] == '\"')
 	{
-		if (str[i] == '"' || str[i] == '\'')
-		{
-			(*quotes)++;
+		(*quotes)++;
+		i++;
+		while (str[i] && str[i] != '\"')
 			i++;
-			while (str[i] && str[i] != '"' && str[i] != '\'')
-				i++;
-		}
-		if (str[i] && str[i] != ' ' && !is_operator(str + i))
+		i++;
+	}
+	else if (str[i] == '\'')
+	{
+		(*quotes)++;
+		i++;
+		while (str[i] && str[i] != '\'')
+			i++;
+		i++;
+	}
+	else
+	{
+		while (str[i] && str[i] != ' ' && !is_operator(str + i))
 			i++;
 	}
 	return (i);

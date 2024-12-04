@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:52:12 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/11/29 17:37:36 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:34:12 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,6 @@ void	assign_words_type(t_token *token)
 	}
 	while (token && token->next != head)
 	{
-		// if (!token->type && (token->next->type == INPUT
-		// 		|| token->next->type == HEREDOC))
-		// 	token->type = CMD;
 		if (!token->type && token->prev->type == PIPE)
 			token->type = CMD;
 		if (!token->type && (token->prev->type == CMD
@@ -68,13 +65,8 @@ void	copy_token(char *str, char *word, int len)
 		return ;
 	while (str[i] && i < len)
 	{
-		if (str[i] == '"' || str[i] == '\'')
-			i++;
-		else
-		{
-			word[j++] = str[i];
-			i++;
-		}
+		word[j++] = str[i];
+		i++;
 	}
 	word[j] = '\0';
 }
