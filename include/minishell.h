@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:57:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/03 20:35:15 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:04:51 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void				signals(void);
 char				*header_prompt(void);
 void				init_data(int ac, char **av, char **env, t_data *data);
 void				wait_all(t_data *data);
+void				here_doc(char *lim);
 
 // builtins
 int					ft_echo(char **args);

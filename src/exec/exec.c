@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:55:33 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/03 19:32:37 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:50:02 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 void	cmd_redirections(t_data *data, t_cmd *cmd, int input_fd, int pipe_fd)
 {
+	(void)data;
 	if (cmd->infile != NO_FD)
 	{
 		dup2(cmd->infile, STDIN_FILENO);
-		if (cmd != data->cmds)
-			close(cmd->infile);
+		close(cmd->infile);
 	}
 	else
 		dup2(input_fd, STDIN_FILENO);
@@ -43,6 +43,8 @@ void	exec_parent(t_data *data, t_cmd *cmd, int input_fd)
 		exec(data, cmd);
 		exit(EXIT_FAILURE);
 	}
+	if (input_fd != STDIN_FILENO)
+		close(input_fd);
 }
 
 void	exec_child(t_data *data, t_cmd *cmd, int input_fd, int pipe_fd[2])
@@ -57,6 +59,9 @@ void	exec_child(t_data *data, t_cmd *cmd, int input_fd, int pipe_fd[2])
 		exec(data, cmd);
 		exit(EXIT_FAILURE);
 	}
+	close(pipe_fd[1]);
+	if (input_fd != STDIN_FILENO)
+		close(input_fd);
 }
 
 void	exec_pipeline(t_data *data)
@@ -76,9 +81,6 @@ void	exec_pipeline(t_data *data)
 		}
 		pipe(pipe_fd);
 		exec_child(data, cmd, input_fd, pipe_fd);
-		close(pipe_fd[1]);
-		if (input_fd != STDIN_FILENO)
-			close(input_fd);
 		input_fd = pipe_fd[0];
 		cmd = cmd->next;
 	}

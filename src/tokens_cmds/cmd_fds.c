@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:52:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/02 17:49:58 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:59:08 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,22 @@ int	open_file(char *file, int type)
 			perror(file);
 		fd = open(file, O_RDONLY);
 	}
+	if (type == HEREDOC)
+	{
+		here_doc(file);
+		if (access("tmp.txt", R_OK) != 0)
+			perror("tmp.txt");
+		fd = open("tmp.txt", O_RDONLY);
+	}
 	if (type == TRUNC)
 	{
-		fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+		fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0777);
 		if (access(file, W_OK) != 0)
 			perror(file);
 	}
 	if (type == APPEND)
 	{
-		fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0777);
+		fd = open(file, O_RDWR | O_CREAT | O_APPEND, 0777);
 		if (access(file, W_OK) != 0)
 			perror(file);
 	}
@@ -47,15 +54,16 @@ void	get_outfile(t_data *data, t_token **token)
 
 	cmd = ft_cmdlast(data->cmds);
 	tmp = *token;
-	while (tmp && tmp->next->type == ARG)
-		tmp = tmp->next;
-	if (tmp->next != data->tokens && (tmp->next->type == TRUNC
-			|| tmp->next->type == APPEND))
+	while (tmp && tmp->next != data->tokens && (tmp->next->type != CMD))
 	{
+		if (tmp->type == TRUNC || tmp->type == APPEND)
+		{
+			cmd->outfile = open_file(tmp->next->str, tmp->type);
+			if (cmd->outfile == ERR_FILE_OPEN)
+				cmd->skip_cmd = true;
+			break ;
+		}
 		tmp = tmp->next;
-		cmd->outfile = open_file(tmp->next->str, tmp->type);
-		if (cmd->outfile == ERR_FILE_OPEN)
-			cmd->skip_cmd = true;
 	}
 }
 
