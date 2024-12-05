@@ -3,18 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idjakovi <idjakovi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:27:11 by idjakovi          #+#    #+#             */
-/*   Updated: 2024/11/26 20:18:23 by idjakovi         ###   ########.fr       */
+/*   Updated: 2024/12/05 14:45:32 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_exit_status(int *i)
+char	*handle_exit_status(char *str, int *i, t_data *data)
 {
+	char	*temp;
+	int		code;
+
 	(*i) += 2;
+	if (g_signal != 0)
+		code = 128 + g_signal;
+	else
+		code = data->exit_code;
+	temp = ft_itoa(code);
+	str = ft_strjoin(str, temp);
+	free(temp);
+	return (str);
 }
 
 char	*handle_var_env_no_quotes(char *str, char *str_no_quotes, int *i,
@@ -30,7 +41,6 @@ char	*handle_var_env_no_quotes(char *str, char *str_no_quotes, int *i,
 		&& str[*i] != '\'' && str[*i] != '\0')
 		(*i)++;
 	var_env = ft_substr(str, start, *i - start);
-	// jpeux pas tester mais normalement cest ca
 	if (find_var(&data->env, var_env) != NULL)
 	{
 		str_no_quotes = ft_strjoin(str_no_quotes,

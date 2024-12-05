@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idjakovi <idjakovi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:25:29 by idjakovi          #+#    #+#             */
-/*   Updated: 2024/11/26 20:13:49 by idjakovi         ###   ########.fr       */
+/*   Updated: 2024/12/04 18:17:45 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*parse_db_quotes(char *str, int i, t_data *data)
 				str_db_quotes = handle_var_env_db_quotes(str, str_db_quotes, &i,
 						data);
 			else if (str[i + 1] == '?')
-				handle_exit_status(&i);
+				str_db_quotes = handle_exit_status(str_db_quotes, &i, data);
 			else if (str[i + 1] == '\'' || str[i + 1] == '\"' || str[i
 				+ 1] == ' ')
 				str_db_quotes = handle_dollar(str, str_db_quotes, &i);
@@ -74,7 +74,7 @@ char	*parse_no_quotes(char *str, int i, t_data *data)
 				str_no_quotes = handle_var_env_no_quotes(str, str_no_quotes, &i,
 						data);
 			else if (str[i + 1] == '?')
-				handle_exit_status(&i);
+				str_no_quotes = handle_exit_status(str_no_quotes, &i, data);
 			else if (str[i + 1] == '\'' || str[i + 1] == '\"' || str[i
 				+ 1] == ' ' || str[i + 1] == '\0')
 				str_no_quotes = handle_dollar(str, str_no_quotes, &i);

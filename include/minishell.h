@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:57:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/04 16:04:51 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:07:21 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,7 @@ int					ft_tablen(char **tab);
 
 void				print_error(char *str);
 void				signals(void);
-char				*header_prompt(void);
 void				init_data(int ac, char **av, char **env, t_data *data);
-void				wait_all(t_data *data);
 void				here_doc(char *lim);
 
 // builtins
@@ -140,7 +138,7 @@ int					advance(char *str, int i, char c);
 char				*handle_dollar(char *str, char *substr, int *i);
 
 // parsing_utils.c
-void				handle_exit_status(int *i);
+char				*handle_exit_status(char *str, int *i, t_data *data);
 char				*handle_var_env_no_quotes(char *str, char *str_no_quotes,
 						int *i, t_data *data);
 char				*handle_char_no_quotes(char *str, char *str_no_quotes,

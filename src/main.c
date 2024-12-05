@@ -6,29 +6,13 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/04 16:59:49 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:24:47 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 pid_t	g_signal;
-
-char	*header_prompt(void)
-{
-	char	curr_dir[1024];
-	char	*login;
-
-	login = getenv("USER");
-	ft_strlcat(login, "@~", ft_strlen(login) + 3);
-	getcwd(curr_dir, sizeof(curr_dir));
-	if (ft_strcmp(getenv("USER"), "root") == 0)
-		ft_strlcat(curr_dir, "# ", sizeof(curr_dir));
-	else
-		ft_strlcat(curr_dir, "$ ", sizeof(curr_dir));
-	ft_strlcat(login, curr_dir, sizeof(curr_dir));
-	return (ft_strdup(login));
-}
 
 void	free_tokens(t_token **token)
 {
@@ -84,26 +68,6 @@ void	free_env(t_list **list)
 	list = NULL;
 }
 
-void	wait_all(t_data *data)
-{
-	t_cmd	*cmd;
-	int		status;
-	int		i;
-
-	i = 0;
-	cmd = data->cmds;
-	while (cmd)
-	{
-		if (!is_builtin(cmd->cmd_params[0]))
-		{
-			wait(&status);
-			if (WIFEXITED(status))
-				data->exit_code = WEXITSTATUS(status);
-		}
-		cmd = cmd->next;
-	}
-}
-
 int	main(int ac, char **av, char **env)
 {
 	char	*rl;
@@ -120,7 +84,6 @@ int	main(int ac, char **av, char **env)
 		create_token_list(&data, parsed);
 		create_cmd_list(&data, data.tokens);
 		exec_pipeline(&data);
-		// printf("%d\n", data.exit_code);
 		g_signal = 0;
 		free_tokens(&data.tokens);
 		free_cmds(&data.cmds);

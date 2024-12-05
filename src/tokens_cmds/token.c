@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:34:40 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/04 17:34:00 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/04 18:18:11 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,15 +51,13 @@ void	add_operator(t_token **token_list, char **line)
 		*line += 2;
 }
 
-int	word_len(char *str, int *quotes)
+int	word_len(char *str)
 {
 	int	i;
 
 	i = 0;
-	*quotes = 0;
 	if (str[i] == '\"')
 	{
-		(*quotes)++;
 		i++;
 		while (str[i] && str[i] != '\"')
 			i++;
@@ -67,7 +65,6 @@ int	word_len(char *str, int *quotes)
 	}
 	else if (str[i] == '\'')
 	{
-		(*quotes)++;
 		i++;
 		while (str[i] && str[i] != '\'')
 			i++;
@@ -84,13 +81,12 @@ int	word_len(char *str, int *quotes)
 void	add_word(t_token **token_list, char **line)
 {
 	int		length;
-	int		quotes;
 	char	*word;
 
-	length = word_len(*line, &quotes);
+	length = word_len(*line);
 	if (!length)
 		return ;
-	word = malloc((length - quotes * 2 + 1) * sizeof(char));
+	word = malloc((length + 1) * sizeof(char));
 	if (!word)
 		return (print_error(ERR_MALLOC));
 	copy_token(*line, word, length);

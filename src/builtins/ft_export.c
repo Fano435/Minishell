@@ -6,27 +6,11 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:45:35 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/03 20:23:45 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:03:35 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-bool	valid_identifier(char *str)
-{
-	int	i;
-
-	i = 0;
-	if (!str[0] || (str[0] != '_' && !ft_isalpha(str[0])))
-		return (false);
-	while (str[i] && str[i] != '=')
-	{
-		if (!ft_isalnum(str[i]) && str[i] != '_')
-			return (false);
-		i++;
-	}
-	return (true);
-}
 
 static void	print_dbl_quotes(char *str)
 {
@@ -41,45 +25,23 @@ static void	print_dbl_quotes(char *str)
 		printf("\n");
 }
 
-static void	export_no_args(t_data *data)
+static int	export_no_args(t_data *data)
 {
 	t_list	*sorted;
 
 	sorted = sort_list(data->env);
+	if (!sorted)
+		return (1);
 	while (sorted)
 	{
 		printf("declare -x ");
 		print_dbl_quotes(sorted->content);
 		sorted = sorted->next;
 	}
+	return (0);
 }
 
-int	var_pos(t_list *env, char *var)
-{
-	int		size;
-	int		i;
-	char	*content;
-	t_list	*tmp;
-
-	if (!env)
-		return (-1);
-	tmp = env;
-	i = 0;
-	while (tmp)
-	{
-		size = 0;
-		content = (char *)tmp->content;
-		while (content[size] && content[size] != '=')
-			size++;
-		if (ft_strncmp(content, var, size) == 0 && var[size] == '\0')
-			return (i);
-		tmp = tmp->next;
-		i++;
-	}
-	return (-1);
-}
-
-void	update_env(t_list **env, int pos, char *value)
+static void	update_env(t_list **env, int pos, char *value)
 {
 	t_list	*tmp;
 	int		i;
@@ -94,17 +56,27 @@ void	update_env(t_list **env, int pos, char *value)
 	tmp->content = ft_strdup(value);
 }
 
-int	ft_export(t_data *data, char **params)
+static int	add_to_env(t_data *data, char *var)
 {
-	int		pos;
-	int		code;
 	t_list	*new_var;
 
-	if (!params[1])
+	new_var = ft_lstnew(var);
+	if (!new_var)
 	{
-		export_no_args(data);
-		return (0);
+		print_error(ERR_MALLOC);
+		return (1);
 	}
+	ft_lstadd_back(&data->env, new_var);
+	return (0);
+}
+
+int	ft_export(t_data *data, char **params)
+{
+	int	pos;
+	int	code;
+
+	if (!params[1])
+		return (export_no_args(data));
 	code = 0;
 	params++;
 	while (*params)
@@ -118,15 +90,7 @@ int	ft_export(t_data *data, char **params)
 		else if (pos >= 0)
 			update_env(&data->env, pos, *params);
 		else if (pos == -1)
-		{
-			new_var = ft_lstnew(*params);
-			if (!new_var)
-			{
-				print_error(ERR_MALLOC);
-				return (1);
-			}
-			ft_lstadd_back(&data->env, new_var);
-		}
+			code = add_to_env(data, *params);
 		params++;
 	}
 	return (code);

@@ -6,13 +6,13 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:52:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/04 16:59:08 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/05 15:16:26 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	open_file(char *file, int type)
+int	open_infile(char *file, int type)
 {
 	int	fd;
 
@@ -32,6 +32,14 @@ int	open_file(char *file, int type)
 			perror("tmp.txt");
 		fd = open("tmp.txt", O_RDONLY);
 	}
+	return (fd);
+}
+
+int	open_outfile(char *file, int type)
+{
+	int	fd;
+
+	fd = NO_FD;
 	if (type == TRUNC)
 	{
 		fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0777);
@@ -58,7 +66,7 @@ void	get_outfile(t_data *data, t_token **token)
 	{
 		if (tmp->type == TRUNC || tmp->type == APPEND)
 		{
-			cmd->outfile = open_file(tmp->next->str, tmp->type);
+			cmd->outfile = open_outfile(tmp->next->str, tmp->type);
 			if (cmd->outfile == ERR_FILE_OPEN)
 				cmd->skip_cmd = true;
 			break ;
@@ -77,7 +85,7 @@ void	get_infile(t_data *data, t_token **token)
 	if (tmp->next->type == INPUT || tmp->next->type == HEREDOC)
 	{
 		tmp = tmp->next;
-		cmd->infile = open_file(tmp->next->str, tmp->type);
+		cmd->infile = open_infile(tmp->next->str, tmp->type);
 		if (cmd->outfile == ERR_FILE_OPEN)
 			cmd->skip_cmd = true;
 	}

@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:55:33 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/04 16:50:02 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:48:47 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,26 @@ void	exec_child(t_data *data, t_cmd *cmd, int input_fd, int pipe_fd[2])
 	close(pipe_fd[1]);
 	if (input_fd != STDIN_FILENO)
 		close(input_fd);
+}
+
+void	wait_all(t_data *data)
+{
+	t_cmd	*cmd;
+	int		status;
+	int		i;
+
+	i = 0;
+	cmd = data->cmds;
+	while (cmd)
+	{
+		if (!is_builtin(cmd->cmd_params[0]))
+		{
+			wait(&status);
+			if (WIFEXITED(status))
+				data->exit_code = WEXITSTATUS(status);
+		}
+		cmd = cmd->next;
+	}
 }
 
 void	exec_pipeline(t_data *data)

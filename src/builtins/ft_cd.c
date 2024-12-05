@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/13 17:31:26 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/03 19:43:06 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:57:42 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,20 @@ void	print_error(char *str)
 		write(2, str, ft_strlen(str));
 }
 
+t_list	*find_var_node(t_data *data, char *var)
+{
+	t_list	*tmp;
+
+	tmp = data->env;
+	while (tmp)
+	{
+		if (ft_strnstr(tmp->content, var, ft_strlen(var)))
+			return (tmp);
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
 static void	update_wd(t_data *data, char *var)
 {
 	char	*pwd;
@@ -25,33 +39,24 @@ static void	update_wd(t_data *data, char *var)
 	char	*cwd;
 	t_list	*tmp;
 
-	tmp = data->env;
-	while (tmp)
+	tmp = find_var_node(data, var);
+	if (!tmp)
+		return ;
+	if (ft_strcmp(var, "PWD=") == 0)
 	{
-		if (ft_strnstr(tmp->content, var, ft_strlen(var)))
-			break ;
-		tmp = tmp->next;
+		getcwd(buffer, sizeof(buffer));
+		pwd = ft_strjoin(var, buffer);
 	}
-	if (tmp)
+	else
 	{
-		if (ft_strcmp(var, "PWD=") == 0)
-		{
-			getcwd(buffer, sizeof(buffer));
-			pwd = ft_strjoin(var, buffer);
-		}
-		else
-		{
-			cwd = find_var(&data->env, "PWD");
-			if (!cwd)
-				return ;
-			pwd = ft_strjoin("OLD", cwd);
-			free(cwd);
-		}
-		if (!pwd)
-			return (print_error(ERR_MALLOC));
-		free(tmp->content);
-		tmp->content = pwd;
+		cwd = find_var(&data->env, "PWD");
+		if (!cwd)
+			return ;
+		pwd = ft_strjoin("OLD", cwd);
+		free(cwd);
 	}
+	free(tmp->content);
+	tmp->content = pwd;
 }
 
 int	ft_cd(t_data *data, char **params)
