@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:55:33 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/04 17:48:47 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/08 19:10:47 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 void	cmd_redirections(t_data *data, t_cmd *cmd, int input_fd, int pipe_fd)
 {
 	(void)data;
-	if (cmd->infile != NO_FD)
+	if (cmd->infile >= 0)
 	{
 		dup2(cmd->infile, STDIN_FILENO);
 		close(cmd->infile);
 	}
 	else
 		dup2(input_fd, STDIN_FILENO);
-	if (cmd->outfile != NO_FD)
+	if (cmd->outfile >= 0)
 	{
 		dup2(cmd->outfile, STDOUT_FILENO);
 		close(cmd->outfile);
@@ -78,7 +78,12 @@ void	wait_all(t_data *data)
 		{
 			wait(&status);
 			if (WIFEXITED(status))
-				data->exit_code = WEXITSTATUS(status);
+			{
+				if (WIFSIGNALED(status))
+					data->exit_code = g_signal + 128;
+				else
+					data->exit_code = WEXITSTATUS(status);
+			}
 		}
 		cmd = cmd->next;
 	}

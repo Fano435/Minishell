@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:52:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/05 15:16:26 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/08 18:52:23 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	get_infile(t_data *data, t_token **token)
 	{
 		tmp = tmp->next;
 		cmd->infile = open_infile(tmp->next->str, tmp->type);
-		if (cmd->outfile == ERR_FILE_OPEN)
+		if (cmd->infile == ERR_FILE_OPEN)
 			cmd->skip_cmd = true;
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: idjakovi <idjakovi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 19:34:30 by idjakovi          #+#    #+#             */
-/*   Updated: 2024/11/25 19:56:59 by idjakovi         ###   ########.fr       */
+/*   Updated: 2024/12/05 19:34:19 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ int	skip_to_quotes(char *str, int i, char c)
 	while (str[i] && str[i] != c)
 		i++;
 	if (str[i] == '\0')
-	{
-		printf("error\n");
-		exit(1);
-	}
+		return (-1);
 	if (str[i] == c)
 		i++;
 	return (i);
@@ -35,9 +32,17 @@ int	check_closed_quotes(char *str)
 	while (str[i])
 	{
 		if (str[i] == '\'')
+		{
 			i = skip_to_quotes(str, i, '\'');
+			if (i == -1)
+				return (1);
+		}
 		if (str[i] == '\"')
+		{
 			i = skip_to_quotes(str, i, '\"');
+			if (i == -1)
+				return (1);
+		}
 		if (str[i] != '\'' && str[i] != '\"' && str[i] != '\0')
 		{
 			while (str[i] != '\'' && str[i] != '\"' && str[i] != '\0')
@@ -46,6 +51,58 @@ int	check_closed_quotes(char *str)
 	}
 	return (0);
 }
+
+int	check_full_w_s(char *str)
+{
+	int	i;
+	int	flag;
+
+	i = 0;
+	flag = 0;
+	while (str[i])
+	{
+		if (str[i] == ' ')
+			flag = 1;
+		else
+			flag = 0;
+		i++;
+	}
+	return (flag);
+}
+// int	skip_to_quotes(char *str, int i, char c)
+// {
+// 	i++;
+// 	while (str[i] && str[i] != c)
+// 		i++;
+// 	if (str[i] == '\0')
+// 	{
+// 		printf("error\n");
+// 		exit(1);
+// 	}
+// 	if (str[i] == c)
+// 		i++;
+// 	return (i);
+// }
+
+// int	check_closed_quotes(char *str)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '\'')
+// 			i = skip_to_quotes(str, i, '\'');
+// 		if (str[i] == '\"')
+// 			i = skip_to_quotes(str, i, '\"');
+// 		if (str[i] != '\'' && str[i] != '\"' && str[i] != '\0')
+// 		{
+// 			while (str[i] != '\'' && str[i] != '\"' && str[i] != '\0')
+// 				i++;
+// 		}
+// 	}
+// 	return (0);
+// }
 
 int	advance(char *str, int i, char c)
 {

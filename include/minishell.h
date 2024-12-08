@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:57:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/05 15:07:21 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/08 16:45:33 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,11 @@ bool				is_builtin(char *cmd);
 void				builtin(t_data *data, t_cmd *cmd, int input_fd,
 						int output_fd);
 
+// free
+void				free_tokens(t_token **token);
+void				free_cmds(t_cmd **list);
+void				free_env(t_list **list);
+
 // builtins_utils
 int					var_pos(t_list *env, char *var);
 char				*get_var_value(char *var);
@@ -105,10 +110,12 @@ t_list				*sort_list(t_list *list);
 void				create_token_list(t_data *data, char *line);
 
 // token_utils
-void				assign_words_type(t_token *token);
+void				assign_words_type(t_token **token);
 void				copy_token(char *str, char *word, int len);
 void				print_tokens(t_token *list);
 void				append_token(t_token **tokken_list, char *str, int type);
+int					is_operator(char *str);
+int					check_syntax(t_token **token);
 
 // cmd
 void				create_cmd_list(t_data *data, t_token *token);
@@ -136,6 +143,7 @@ int					skip_to_quotes(char *str, int i, char c);
 int					check_closed_quotes(char *str);
 int					advance(char *str, int i, char c);
 char				*handle_dollar(char *str, char *substr, int *i);
+int					check_full_w_s(char *str);
 
 // parsing_utils.c
 char				*handle_exit_status(char *str, int *i, t_data *data);

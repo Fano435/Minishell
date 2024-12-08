@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:27:11 by idjakovi          #+#    #+#             */
-/*   Updated: 2024/12/05 14:45:32 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/05 19:25:39 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,9 @@
 char	*handle_exit_status(char *str, int *i, t_data *data)
 {
 	char	*temp;
-	int		code;
 
 	(*i) += 2;
-	if (g_signal != 0)
-		code = 128 + g_signal;
-	else
-		code = data->exit_code;
-	temp = ft_itoa(code);
+	temp = ft_itoa(data->exit_code);
 	str = ft_strjoin(str, temp);
 	free(temp);
 	return (str);

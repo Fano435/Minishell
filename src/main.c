@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/05 15:24:47 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/08 19:08:58 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ void	free_cmds(t_cmd **list)
 	while (*list)
 	{
 		tmp = (*list)->next;
-		if ((*list)->infile != NO_FD)
+		if ((*list)->infile > 0)
 			close((*list)->infile);
-		if ((*list)->outfile != NO_FD)
+		if ((*list)->outfile > 0)
 			close((*list)->outfile);
 		ft_free_tab((*list)->cmd_params);
 		free(*list);
@@ -83,6 +83,7 @@ int	main(int ac, char **av, char **env)
 		parsed = parse_rl(rl, &data);
 		create_token_list(&data, parsed);
 		create_cmd_list(&data, data.tokens);
+		// print_cmd_list(data.cmds);
 		exec_pipeline(&data);
 		g_signal = 0;
 		free_tokens(&data.tokens);

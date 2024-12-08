@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:51:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/03 20:09:53 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/08 18:52:39 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,19 @@ void	exec(t_data *data, t_cmd *cmd)
 	if (!path)
 	{
 		perror(cmd->cmd_params[0]);
-		// print_error(": command not found\n");
 		exit(CMD_NOT_FOUND);
 	}
 	if (is_directory(path))
 	{
 		print_error(path);
 		print_error(": Is a directory\n");
+		free(path);
 		exit(CMD_NO_EXEC);
 	}
 	if (access(path, X_OK) != 0)
 	{
 		perror(path);
+		free(path);
 		exit(CMD_NO_EXEC);
 	}
 	execve(path, cmd->cmd_params, NULL);

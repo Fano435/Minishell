@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:30:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/05 15:22:13 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/05 19:43:57 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@ void	create_cmd_list(t_data *data, t_token *token)
 			get_infile(data, &token);
 			get_outfile(data, &token);
 		}
+		if (token->prev->type != ARG && token->prev->type != CMD
+			&& token->type == HEREDOC)
+			here_doc(token->next->str);
 		token = token->next;
 	}
 	if (token->type == CMD)
@@ -52,4 +55,7 @@ void	create_cmd_list(t_data *data, t_token *token)
 		get_infile(data, &token);
 		get_outfile(data, &token);
 	}
+	if (token->prev->type != ARG && token->prev->type != CMD
+		&& token->type == HEREDOC)
+		here_doc(token->next->str);
 }

@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:34:40 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/04 18:18:11 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/08 18:12:45 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ int	is_operator(char *str)
 	return (0);
 }
 
-void	add_operator(t_token **token_list, char **line)
+int	add_operator(t_token **token_list, char **line)
 {
 	int	op;
 
 	op = is_operator(*line);
-	if (!op)
-		return ;
+	if (!line || !op)
+		return (0);
 	if (op == INPUT)
 		append_token(token_list, ft_strdup("<"), INPUT);
 	else if (op == HEREDOC)
@@ -45,35 +45,48 @@ void	add_operator(t_token **token_list, char **line)
 		append_token(token_list, ft_strdup(">>"), APPEND);
 	else if (op == PIPE)
 		append_token(token_list, ft_strdup("|"), PIPE);
-	if (op == INPUT || op == TRUNC || op == PIPE)
-		(*line)++;
-	else
-		*line += 2;
+	if ((op == INPUT || op == TRUNC || op == PIPE))
+	{
+		if (**line)
+			(*line)++;
+	}
+	else if (**line)
+		(*line) += 2;
+	return (1);
 }
 
-int	word_len(char *str)
+int	is_delimitor(char c)
+{
+	if (c == '\0' || c == ' ')
+		return (1);
+	return (0);
+}
+
+int	word_len(char *str, int *quotes)
 {
 	int	i;
 
 	i = 0;
-	if (str[i] == '\"')
+	*quotes = 0;
+	while (!is_delimitor(str[i]) && !is_operator(str + i))
 	{
-		i++;
-		while (str[i] && str[i] != '\"')
+		if (str[i] == '\"')
+		{
+			(*quotes)++;
 			i++;
-		i++;
-	}
-	else if (str[i] == '\'')
-	{
-		i++;
-		while (str[i] && str[i] != '\'')
+			while (str[i] && str[i] != '\"')
+				i++;
 			i++;
-		i++;
-	}
-	else
-	{
-		while (str[i] && str[i] != ' ' && !is_operator(str + i))
+		}
+		if (str[i] == '\'')
+		{
+			(*quotes)++;
 			i++;
+			while (str[i] && str[i] != '\'')
+				i++;
+			i++;
+		}
+		i++;
 	}
 	return (i);
 }
@@ -82,11 +95,13 @@ void	add_word(t_token **token_list, char **line)
 {
 	int		length;
 	char	*word;
+	int		quotes;
 
-	length = word_len(*line);
+	quotes = 0;
+	length = word_len(*line, &quotes);
 	if (!length)
 		return ;
-	word = malloc((length + 1) * sizeof(char));
+	word = malloc((length + 1 - (quotes * 2)) * sizeof(char));
 	if (!word)
 		return (print_error(ERR_MALLOC));
 	copy_token(*line, word, length);
@@ -106,9 +121,15 @@ void	create_token_list(t_data *data, char *line)
 	{
 		while (*line == ' ')
 			line++;
-		add_operator(&data->tokens, &line);
-		add_word(&data->tokens, &line);
-		line++;
+		if (!add_operator(&data->tokens, &line))
+			add_word(&data->tokens, &line);
+		if (*line)
+			line++;
 	}
-	assign_words_type(data->tokens);
+	assign_words_type(&data->tokens);
+	if (!check_syntax(&data->tokens))
+	{
+		free_tokens(&data->tokens);
+		data->tokens = NULL;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:25:29 by idjakovi          #+#    #+#             */
-/*   Updated: 2024/12/04 18:17:45 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/05 19:37:12 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,9 @@ char	*parse_rl(char *str, t_data *data)
 	char	*str_parsed;
 
 	i = 0;
-	check_closed_quotes(str);
 	str_parsed = ft_strdup("");
+	if (check_closed_quotes(str) || check_full_w_s(str))
+		return (str_parsed);
 	while (str[i])
 	{
 		if (str[i] == '\'')

@@ -6,16 +6,50 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:52:12 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/04 17:34:12 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/08 18:22:45 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	assign_words_type(t_token *token)
+int	check_syntax(t_token **token_list)
 {
 	t_token	*head;
+	t_token	*token;
 
+	token = *token_list;
+	if (!token)
+		return (1);
+	head = token;
+	if (token->type == PIPE)
+	{
+		print_error("syntax error near unexpected token\n");
+		return (0);
+	}
+	while (token && token->next && token->next != head)
+	{
+		if (is_operator(token->str) && (token->next == head
+				|| is_operator(token->next->str)))
+		{
+			print_error("syntax error near unexpected token \n");
+			return (0);
+		}
+		token = token->next;
+	}
+	if (is_operator(token->str))
+	{
+		print_error("syntax error near unexpected token 'newline'\n");
+		return (0);
+	}
+	return (1);
+}
+
+void	assign_words_type(t_token **list)
+{
+	t_token	*head;
+	t_token	*token;
+
+	token = *list;
 	if (!token)
 		return ;
 	head = token;
@@ -65,8 +99,13 @@ void	copy_token(char *str, char *word, int len)
 		return ;
 	while (str[i] && i < len)
 	{
-		word[j++] = str[i];
-		i++;
+		if (str[i] == '"' || str[i] == '\'')
+			i++;
+		else
+		{
+			word[j++] = str[i];
+			i++;
+		}
 	}
 	word[j] = '\0';
 }
