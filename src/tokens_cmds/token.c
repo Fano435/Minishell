@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:34:40 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/08 18:12:45 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/10 18:50:19 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,8 @@ int	add_operator(t_token **token_list, char **line)
 		append_token(token_list, ft_strdup(">>"), APPEND);
 	else if (op == PIPE)
 		append_token(token_list, ft_strdup("|"), PIPE);
-	if ((op == INPUT || op == TRUNC || op == PIPE))
-	{
-		if (**line)
-			(*line)++;
-	}
-	else if (**line)
-		(*line) += 2;
+	if (op == APPEND || op == HEREDOC)
+		(*line)++;
 	return (1);
 }
 

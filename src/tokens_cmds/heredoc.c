@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 15:36:42 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/04 16:52:15 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/10 18:39:50 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ void	here_doc(char *lim)
 	tmp_fd = open("tmp.txt", O_CREAT | O_RDWR | O_TRUNC, 0777);
 	while (1)
 	{
-		here_doc = readline("heredoc> ");
+		here_doc = readline("> ");
 		if (ft_strcmp(here_doc, lim) == 0)
 		{
 			free(here_doc);
 			close(tmp_fd);
-			return ;
+			break ;
 		}
 		if (ft_strcmp(here_doc, lim) != 0)
 		{

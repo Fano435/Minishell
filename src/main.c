@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/08 19:08:58 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/10 18:55:10 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,7 @@ int	main(int ac, char **av, char **env)
 		parsed = parse_rl(rl, &data);
 		create_token_list(&data, parsed);
 		create_cmd_list(&data, data.tokens);
-		// print_cmd_list(data.cmds);
 		exec_pipeline(&data);
-		g_signal = 0;
 		free_tokens(&data.tokens);
 		free_cmds(&data.cmds);
 		free(parsed);

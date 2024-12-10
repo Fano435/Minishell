@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:57:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/08 16:45:33 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/10 17:50:24 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int					ft_tablen(char **tab);
 
 void				print_error(char *str);
 void				signals(void);
+void				handle_sigint(int code);
 void				init_data(int ac, char **av, char **env, t_data *data);
 void				here_doc(char *lim);
 

@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:55:33 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/08 19:10:47 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/10 18:54:45 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	exec_parent(t_data *data, t_cmd *cmd, int input_fd)
 	else if (fork() == 0)
 	{
 		cmd_redirections(data, cmd, input_fd, 1);
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		exec(data, cmd);
 		exit(EXIT_FAILURE);
 	}
@@ -56,6 +58,8 @@ void	exec_child(t_data *data, t_cmd *cmd, int input_fd, int pipe_fd[2])
 		cmd_redirections(data, cmd, input_fd, pipe_fd[1]);
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
+		signal(SIGQUIT, SIG_DFL);
+		signal(SIGINT, SIG_DFL);
 		exec(data, cmd);
 		exit(EXIT_FAILURE);
 	}
@@ -67,11 +71,12 @@ void	exec_child(t_data *data, t_cmd *cmd, int input_fd, int pipe_fd[2])
 void	wait_all(t_data *data)
 {
 	t_cmd	*cmd;
-	int		status;
 	int		i;
+	int		status;
 
 	i = 0;
 	cmd = data->cmds;
+	signal(SIGINT, SIG_IGN);
 	while (cmd)
 	{
 		if (!is_builtin(cmd->cmd_params[0]))
@@ -79,14 +84,19 @@ void	wait_all(t_data *data)
 			wait(&status);
 			if (WIFEXITED(status))
 			{
-				if (WIFSIGNALED(status))
-					data->exit_code = g_signal + 128;
-				else
-					data->exit_code = WEXITSTATUS(status);
+				data->exit_code = WEXITSTATUS(status);
+			}
+			else if (WIFSIGNALED(status))
+			{
+				data->exit_code = WTERMSIG(status) + 128;
+				if (data->exit_code == 131)
+					printf("Quit (core dumped)");
+				printf("\n");
 			}
 		}
 		cmd = cmd->next;
 	}
+	signals();
 }
 
 void	exec_pipeline(t_data *data)
