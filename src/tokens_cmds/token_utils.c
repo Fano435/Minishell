@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:52:12 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/08 18:22:45 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/11 16:40:51 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ int	check_syntax(t_token **token_list)
 	}
 	while (token && token->next && token->next != head)
 	{
-		if (is_operator(token->str) && (token->next == head
-				|| is_operator(token->next->str)))
+		if ((is_operator(token->str) && token->type != PIPE)
+			&& (token->next == head || is_operator(token->next->str)))
 		{
 			print_error("syntax error near unexpected token \n");
 			return (0);
@@ -60,14 +60,14 @@ void	assign_words_type(t_token **list)
 	}
 	while (token && token->next != head)
 	{
-		if (!token->type && token->prev->type == PIPE)
-			token->type = CMD;
 		if (!token->type && (token->prev->type == CMD
 				|| token->prev->type == ARG))
 			token->type = ARG;
+		if (!token->type && !(token->prev->type && token->prev->type != PIPE))
+			token->type = CMD;
 		token = token->next;
 	}
-	if (!token->type && token->prev->type == PIPE)
+	if (!token->type && !(token->prev->type && token->prev->type != PIPE))
 		token->type = CMD;
 	if (!token->type && (token->prev->type == CMD || token->prev->type == ARG))
 		token->type = ARG;

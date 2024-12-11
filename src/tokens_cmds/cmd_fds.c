@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:52:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/08 18:52:23 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/11 15:34:14 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,17 @@ void	get_outfile(t_data *data, t_token **token)
 
 	cmd = ft_cmdlast(data->cmds);
 	tmp = *token;
-	while (tmp && tmp->next != data->tokens && (tmp->next->type != CMD))
+	while (tmp && tmp != data->tokens && (tmp->prev->type != PIPE))
+		tmp = tmp->prev;
+	while (tmp && tmp->next != data->tokens && (tmp->type != PIPE))
 	{
 		if (tmp->type == TRUNC || tmp->type == APPEND)
 		{
+			if (cmd->outfile >= 0)
+				close(cmd->outfile);
 			cmd->outfile = open_outfile(tmp->next->str, tmp->type);
 			if (cmd->outfile == ERR_FILE_OPEN)
 				cmd->skip_cmd = true;
-			break ;
 		}
 		tmp = tmp->next;
 	}
@@ -82,11 +85,18 @@ void	get_infile(t_data *data, t_token **token)
 
 	cmd = ft_cmdlast(data->cmds);
 	tmp = *token;
-	if (tmp->next->type == INPUT || tmp->next->type == HEREDOC)
+	while (tmp && tmp != data->tokens && (tmp->prev->type != PIPE))
+		tmp = tmp->prev;
+	while (tmp && tmp->next != data->tokens && (tmp->type != PIPE))
 	{
+		if (tmp->type == INPUT || tmp->type == HEREDOC)
+		{
+			if (cmd->infile >= 0)
+				close(cmd->infile);
+			cmd->infile = open_infile(tmp->next->str, tmp->type);
+			if (cmd->infile == ERR_FILE_OPEN)
+				cmd->skip_cmd = true;
+		}
 		tmp = tmp->next;
-		cmd->infile = open_infile(tmp->next->str, tmp->type);
-		if (cmd->infile == ERR_FILE_OPEN)
-			cmd->skip_cmd = true;
 	}
 }
