@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:51:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/08 18:52:39 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:40:14 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	exec(t_data *data, t_cmd *cmd)
 	path = get_path(data, cmd->cmd_params[0]);
 	if (!path)
 	{
-		perror(cmd->cmd_params[0]);
+		print_error("command not found\n");
 		exit(CMD_NOT_FOUND);
 	}
 	if (is_directory(path))

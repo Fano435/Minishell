@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:57:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/10 17:50:24 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:12:31 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ int					ft_tablen(char **tab);
 
 void				print_error(char *str);
 void				signals(void);
+void				cmd_sigint(int code);
 void				handle_sigint(int code);
 void				init_data(int ac, char **av, char **env, t_data *data);
 void				here_doc(char *lim);
@@ -82,19 +83,19 @@ void				here_doc(char *lim);
 // builtins
 int					ft_echo(char **args);
 int					ft_cd(t_data *data, char **args);
-int					ft_pwd(t_data *data);
+int					ft_pwd(void);
 int					ft_export(t_data *data, char **args);
 int					ft_unset(t_data *data, char **args);
 int					ft_env(t_data *data);
-void				ft_exit(t_data *data, char **args);
+int					ft_exit(char **params);
 bool				is_builtin(char *cmd);
-void				builtin(t_data *data, t_cmd *cmd, int input_fd,
-						int output_fd);
+void				builtin(t_data *data, t_cmd *cmd);
 
 // free
 void				free_tokens(t_token **token);
 void				free_cmds(t_cmd **list);
 void				free_env(t_list **list);
+void				free_all(t_data *data);
 
 // builtins_utils
 int					var_pos(t_list *env, char *var);
@@ -138,6 +139,7 @@ void				exec_pipeline(t_data *data);
 void				exec(t_data *data, t_cmd *cmd);
 void				cmd_redirections(t_data *data, t_cmd *cmd, int input_fd,
 						int pipe_fd);
+int					exec_builtin_cmd(t_data *data, t_cmd *cmd);
 
 // utils.c
 int					skip_to_quotes(char *str, int i, char c);

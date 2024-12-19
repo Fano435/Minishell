@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:34:40 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/11 16:25:30 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:42:35 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,5 +126,6 @@ void	create_token_list(t_data *data, char *line)
 	{
 		free_tokens(&data->tokens);
 		data->tokens = NULL;
+		data->exit_code = 2;
 	}
 }

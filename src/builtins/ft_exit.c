@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 16:00:24 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/02 17:08:17 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:14:15 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,54 @@ static int	manage_negs(int n)
 		return (n % 256);
 }
 
-void	ft_exit(t_data *data, char **params)
+long	atol_exit(char *str, bool *valid)
 {
-	int	i;
+	long	res;
+	int		sign;
+	int		i;
+	int		start;
 
-	printf("exit\n");
-	(void)data;
-	if (!params[1])
-		exit(0);
+	res = 0;
+	sign = 1;
 	i = 0;
-	if (params[1][0] == '-' || params[1][0] == '+')
+	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
 		i++;
-	while (params[1][i])
+	if (str[i] == '-' || str[i] == '+')
 	{
-		if (!ft_isdigit(params[1][i]))
-		{
-			print_error("numeric argument required\n");
-			exit(2);
-		}
+		if (str[i] == '-')
+			sign = -1;
 		i++;
 	}
-	if (ft_tablen(params) > 2)
-		return (print_error("too many arguments\n"));
-	exit(manage_negs(ft_atoi(params[1])));
+	start = i;
+	while (str[i] && ft_isdigit(str[i]))
+		res = res * 10 + (str[i++] - '0');
+	if (i - start > 19 || start == i || res < 0)
+		*valid = false;
+	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
+		i++;
+	if (str[i])
+		*valid = false;
+	return (sign * res);
+}
+
+int	ft_exit(char **params)
+{
+	int		n;
+	bool	valid;
+
+	valid = true;
+	if (!params[1])
+		return (0);
+	n = atol_exit(params[1], &valid);
+	if (valid && ft_tablen(params) > 2)
+	{
+		print_error("too many arguments\n");
+		return (2);
+	}
+	else if (!valid)
+	{
+		print_error("numeric argument required\n");
+		return (2);
+	}
+	return (manage_negs(n));
 }

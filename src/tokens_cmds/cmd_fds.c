@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:52:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/11 15:34:14 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/13 16:55:15 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	open_infile(char *file, int type)
 	int	fd;
 
 	fd = NO_FD;
+	printf("%s\n", file);
 	if (type == PIPE)
 		return (fd);
 	if (type == INPUT)
@@ -40,6 +41,7 @@ int	open_outfile(char *file, int type)
 	int	fd;
 
 	fd = NO_FD;
+	printf("%s\n", file);
 	if (type == TRUNC)
 	{
 		fd = open(file, O_RDWR | O_CREAT | O_TRUNC, 0777);

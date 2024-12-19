@@ -6,22 +6,24 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 18:31:14 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/05 15:06:38 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/11 17:07:41 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_pwd(t_data *data)
+int	ft_pwd(void)
 {
-	char	*cwd;
+	char	cwd[PATH_MAX];
 
-	cwd = get_var_value(find_var(&data->env, "PWD"));
-	if (cwd)
+	if (getcwd(cwd, PATH_MAX))
 	{
 		printf("%s\n", cwd);
-		free(cwd);
 		return (0);
 	}
-	return (1);
+	else
+	{
+		perror("pwd");
+		return (1);
+	}
 }

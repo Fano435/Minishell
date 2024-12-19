@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/05 15:01:23 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/05 15:03:04 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:58:47 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ int	var_pos(t_list *env, char *var)
 		content = (char *)tmp->content;
 		while (content[size] && content[size] != '=')
 			size++;
-		if (ft_strncmp(content, var, size) == 0 && var[size] == '\0')
+		if (ft_strncmp(content, var, size) == 0 && (var[size] == '\0'
+				|| var[size] == '='))
 			return (i);
 		tmp = tmp->next;
 		i++;

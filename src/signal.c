@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:18:07 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/10 19:07:21 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:47:25 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,15 @@ void	handle_sigint(int code)
 	rl_redisplay();
 }
 
-static void	handle_sigsev(int code)
+void	cmd_sigint(int code)
 {
 	(void)code;
-	print_error("Segmentation fault\n");
-	exit(11);
+	printf("\n");
+	rl_on_new_line();
 }
 
 void	signals(void)
 {
 	signal(SIGINT, &handle_sigint);
 	signal(SIGQUIT, SIG_IGN);
-	signal(SIGSEGV, &handle_sigsev);
 }

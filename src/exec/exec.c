@@ -6,13 +6,13 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:55:33 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/10 18:54:45 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:27:33 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	cmd_redirections(t_data *data, t_cmd *cmd, int input_fd, int pipe_fd)
+void	cmd_redirections(t_data *data, t_cmd *cmd, int input_fd, int fd_out)
 {
 	(void)data;
 	if (cmd->infile >= 0)
@@ -28,20 +28,35 @@ void	cmd_redirections(t_data *data, t_cmd *cmd, int input_fd, int pipe_fd)
 		close(cmd->outfile);
 	}
 	else if (cmd->next)
-		dup2(pipe_fd, STDOUT_FILENO);
+		dup2(fd_out, STDOUT_FILENO);
 	if (input_fd != STDIN_FILENO)
 		close(input_fd);
 }
 
-void	exec_parent(t_data *data, t_cmd *cmd, int input_fd)
+void	exec_last(t_data *data, t_cmd *cmd, int input_fd)
 {
-	if (is_builtin(cmd->cmd_params[0]))
-		builtin(data, cmd, input_fd, NO_FD);
+	if (is_builtin(cmd->cmd_params[0]) && data->cmds == cmd)
+	{
+		cmd_redirections(data, cmd, input_fd, 1);
+		if (ft_strcmp(cmd->cmd_params[0], "exit") == 0)
+		{
+			wait(NULL);
+			if (input_fd != STDIN_FILENO)
+				close(input_fd);
+			printf("exit\n");
+			exit(ft_exit(cmd->cmd_params));
+		}
+		builtin(data, cmd);
+	}
 	else if (fork() == 0)
 	{
 		cmd_redirections(data, cmd, input_fd, 1);
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
+		if (is_builtin(cmd->cmd_params[0]))
+		{
+			exit(exec_builtin_cmd(data, cmd));
+		}
 		exec(data, cmd);
 		exit(EXIT_FAILURE);
 	}
@@ -51,15 +66,15 @@ void	exec_parent(t_data *data, t_cmd *cmd, int input_fd)
 
 void	exec_child(t_data *data, t_cmd *cmd, int input_fd, int pipe_fd[2])
 {
-	if (is_builtin(cmd->cmd_params[0]))
-		builtin(data, cmd, input_fd, pipe_fd[1]);
-	else if (fork() == 0)
+	if (fork() == 0)
 	{
 		cmd_redirections(data, cmd, input_fd, pipe_fd[1]);
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
-		signal(SIGQUIT, SIG_DFL);
 		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		if (is_builtin(cmd->cmd_params[0]))
+			exit(exec_builtin_cmd(data, cmd));
 		exec(data, cmd);
 		exit(EXIT_FAILURE);
 	}
@@ -76,23 +91,17 @@ void	wait_all(t_data *data)
 
 	i = 0;
 	cmd = data->cmds;
-	signal(SIGINT, SIG_IGN);
+	status = 0;
+	signal(SIGINT, cmd_sigint);
 	while (cmd)
 	{
+		wait(&status);
 		if (!is_builtin(cmd->cmd_params[0]))
 		{
-			wait(&status);
 			if (WIFEXITED(status))
-			{
 				data->exit_code = WEXITSTATUS(status);
-			}
 			else if (WIFSIGNALED(status))
-			{
 				data->exit_code = WTERMSIG(status) + 128;
-				if (data->exit_code == 131)
-					printf("Quit (core dumped)");
-				printf("\n");
-			}
 		}
 		cmd = cmd->next;
 	}
@@ -101,9 +110,9 @@ void	wait_all(t_data *data)
 
 void	exec_pipeline(t_data *data)
 {
-	int		pipe_fd[2];
 	int		input_fd;
 	t_cmd	*cmd;
+	int		pipe_fd[2];
 
 	input_fd = 0;
 	cmd = data->cmds;
@@ -111,7 +120,7 @@ void	exec_pipeline(t_data *data)
 	{
 		if (!cmd->next)
 		{
-			exec_parent(data, cmd, input_fd);
+			exec_last(data, cmd, input_fd);
 			break ;
 		}
 		pipe(pipe_fd);
