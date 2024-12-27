@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 16:00:24 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/19 19:14:15 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/23 15:50:24 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ long	atol_exit(char *str, bool *valid)
 	return (sign * res);
 }
 
-int	ft_exit(char **params)
+int	ft_exit(char **params, bool *exit)
 {
 	int		n;
 	bool	valid;
@@ -62,7 +62,8 @@ int	ft_exit(char **params)
 	if (valid && ft_tablen(params) > 2)
 	{
 		print_error("too many arguments\n");
-		return (2);
+		*exit = false;
+		return (1);
 	}
 	else if (!valid)
 	{

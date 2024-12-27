@@ -6,24 +6,17 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:30:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/05 19:43:57 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/23 15:57:17 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_cmd_list(t_cmd *list)
+void	create_cmd(t_data *data, t_token **token)
 {
-	int	i;
-
-	while (list)
-	{
-		i = 0;
-		printf("Infile : %d\nOutfile : %d\n", list->infile, list->outfile);
-		while (list->cmd_params[i])
-			printf("%s\n\n", list->cmd_params[i++]);
-		list = list->next;
-	}
+	append_cmd(&data->cmds, get_cmd_params(data, token), -2, -2);
+	get_infile(data, token);
+	get_outfile(data, token);
 }
 
 void	create_cmd_list(t_data *data, t_token *token)
@@ -39,22 +32,14 @@ void	create_cmd_list(t_data *data, t_token *token)
 	while (token && token->next != head)
 	{
 		if (token->type == CMD)
-		{
-			append_cmd(&data->cmds, get_cmd_params(data, &token), -2, -2);
-			get_infile(data, &token);
-			get_outfile(data, &token);
-		}
+			create_cmd(data, &token);
 		if (token->prev->type != ARG && token->prev->type != CMD
 			&& token->type == HEREDOC)
 			here_doc(token->next->str);
 		token = token->next;
 	}
 	if (token->type == CMD)
-	{
-		append_cmd(&data->cmds, get_cmd_params(data, &token), -2, -2);
-		get_infile(data, &token);
-		get_outfile(data, &token);
-	}
+		create_cmd(data, &token);
 	if (token->prev->type != ARG && token->prev->type != CMD
 		&& token->type == HEREDOC)
 		here_doc(token->next->str);

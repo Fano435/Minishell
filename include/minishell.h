@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:57:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/19 19:12:31 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/23 15:02:15 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,15 +87,14 @@ int					ft_pwd(void);
 int					ft_export(t_data *data, char **args);
 int					ft_unset(t_data *data, char **args);
 int					ft_env(t_data *data);
-int					ft_exit(char **params);
+int					ft_exit(char **params, bool *exit);
 bool				is_builtin(char *cmd);
-void				builtin(t_data *data, t_cmd *cmd);
+void				no_fork_builtin(t_data *data, t_cmd *cmd);
 
 // free
 void				free_tokens(t_token **token);
 void				free_cmds(t_cmd **list);
 void				free_env(t_list **list);
-void				free_all(t_data *data);
 
 // builtins_utils
 int					var_pos(t_list *env, char *var);

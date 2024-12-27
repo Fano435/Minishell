@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:55:33 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/19 19:27:33 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/23 15:29:00 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,27 +36,14 @@ void	cmd_redirections(t_data *data, t_cmd *cmd, int input_fd, int fd_out)
 void	exec_last(t_data *data, t_cmd *cmd, int input_fd)
 {
 	if (is_builtin(cmd->cmd_params[0]) && data->cmds == cmd)
-	{
-		cmd_redirections(data, cmd, input_fd, 1);
-		if (ft_strcmp(cmd->cmd_params[0], "exit") == 0)
-		{
-			wait(NULL);
-			if (input_fd != STDIN_FILENO)
-				close(input_fd);
-			printf("exit\n");
-			exit(ft_exit(cmd->cmd_params));
-		}
-		builtin(data, cmd);
-	}
+		no_fork_builtin(data, cmd);
 	else if (fork() == 0)
 	{
 		cmd_redirections(data, cmd, input_fd, 1);
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		if (is_builtin(cmd->cmd_params[0]))
-		{
 			exit(exec_builtin_cmd(data, cmd));
-		}
 		exec(data, cmd);
 		exit(EXIT_FAILURE);
 	}
@@ -91,16 +78,16 @@ void	wait_all(t_data *data)
 
 	i = 0;
 	cmd = data->cmds;
-	status = 0;
 	signal(SIGINT, cmd_sigint);
 	while (cmd)
 	{
-		wait(&status);
-		if (!is_builtin(cmd->cmd_params[0]))
+		if (!is_builtin(cmd->cmd_params[0]) || data->cmds != cmd)
+			wait(&status);
+		if (WIFEXITED(status))
+			data->exit_code = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
 		{
-			if (WIFEXITED(status))
-				data->exit_code = WEXITSTATUS(status);
-			else if (WIFSIGNALED(status))
+			if (WTERMSIG(status) != SIGPIPE)
 				data->exit_code = WTERMSIG(status) + 128;
 		}
 		cmd = cmd->next;

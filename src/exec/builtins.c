@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:53:44 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/19 19:10:59 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/23 15:04:04 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,32 @@ int	exec_builtin_cmd(t_data *data, t_cmd *cmd)
 	if (ft_strcmp(cmd->cmd_params[0], "env") == 0)
 		return (ft_env(data));
 	if (ft_strcmp(cmd->cmd_params[0], "exit") == 0)
-	{
-		return (ft_exit(cmd->cmd_params));
-	}
+		return (ft_exit(cmd->cmd_params, NULL));
 	return (0);
 }
 
-void	builtin(t_data *data, t_cmd *cmd)
+void	no_fork_builtin(t_data *data, t_cmd *cmd)
 {
-	int	saved_stdin;
-	int	saved_stdout;
+	int		saved_stdin;
+	int		saved_stdout;
+	bool	m_exit;
 
+	m_exit = true;
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
-	data->exit_code = exec_builtin_cmd(data, cmd);
+	cmd_redirections(data, cmd, STDIN_FILENO, STDOUT_FILENO);
+	if (ft_strcmp(cmd->cmd_params[0], "exit") == 0)
+	{
+		data->exit_code = ft_exit(cmd->cmd_params, &m_exit);
+		if (m_exit)
+		{
+			close(saved_stdin);
+			close(saved_stdout);
+			exit(data->exit_code);
+		}
+	}
+	else
+		data->exit_code = exec_builtin_cmd(data, cmd);
 	dup2(saved_stdin, STDIN_FILENO);
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdin);

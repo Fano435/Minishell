@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:51:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/19 19:40:14 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/23 15:40:56 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	*get_path(t_data *data, char *cmd)
 
 	if (!cmd)
 		return (NULL);
-	if (access(cmd, X_OK) == 0)
+	if (access(cmd, F_OK) == 0)
 		return (ft_strdup(cmd));
 	path_env = get_var_value(find_var(&data->env, "PATH"));
 	if (!path_env)
@@ -60,12 +60,29 @@ char	*get_path(t_data *data, char *cmd)
 	return (extract_cmd(paths, cmd));
 }
 
-int	is_directory(char *path)
+static int	is_directory(char *path)
 {
 	struct stat	path_stat;
 
 	stat(path, &path_stat);
 	return (S_ISDIR(path_stat.st_mode));
+}
+
+static void	check_exec(char *path)
+{
+	if (is_directory(path))
+	{
+		print_error(path);
+		print_error(": Is a directory\n");
+		free(path);
+		exit(CMD_NO_EXEC);
+	}
+	if (access(path, X_OK) != 0)
+	{
+		perror(path);
+		free(path);
+		exit(CMD_NO_EXEC);
+	}
 }
 
 void	exec(t_data *data, t_cmd *cmd)
@@ -80,19 +97,7 @@ void	exec(t_data *data, t_cmd *cmd)
 		print_error("command not found\n");
 		exit(CMD_NOT_FOUND);
 	}
-	if (is_directory(path))
-	{
-		print_error(path);
-		print_error(": Is a directory\n");
-		free(path);
-		exit(CMD_NO_EXEC);
-	}
-	if (access(path, X_OK) != 0)
-	{
-		perror(path);
-		free(path);
-		exit(CMD_NO_EXEC);
-	}
+	check_exec(path);
 	execve(path, cmd->cmd_params, NULL);
 	exit(EXIT_FAILURE);
 	free(path);

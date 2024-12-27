@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:52:12 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/11 16:40:51 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/23 15:51:29 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,21 +71,6 @@ void	assign_words_type(t_token **list)
 		token->type = CMD;
 	if (!token->type && (token->prev->type == CMD || token->prev->type == ARG))
 		token->type = ARG;
-}
-
-void	print_tokens(t_token *token)
-{
-	t_token	*head;
-
-	if (!token)
-		return ;
-	head = token;
-	while (token && token->next != head)
-	{
-		printf("%s : %d\n", token->str, token->type);
-		token = token->next;
-	}
-	printf("%s : %d\n", token->str, token->type);
 }
 
 void	copy_token(char *str, char *word, int len)
