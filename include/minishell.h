@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:57:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/27 18:22:56 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/30 19:02:01 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ int					check_closed_quotes(char *str);
 int					advance(char *str, int i, char c);
 char				*handle_dollar(char *str, char *substr, int *i);
 int					check_full_w_s(char *str);
+int					cond_handle_dollar(char *s, int i);
 
 // parsing_utils.c
 char				*handle_exit_status(char *str, int *i, t_data *data);

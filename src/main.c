@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/30 16:08:25 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/30 17:07:05 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,11 @@ int	main(int ac, char **av, char **env)
 {
 	char	*rl;
 	t_data	data;
-	char	*parsed;
 
 	init_data(ac, av, env, &data);
 	while (1)
 	{
 		rl = readline("minishell > ");
-		parsed = parse_rl(rl, &data);
 		if (rl == NULL)
 			break ;
 		if (g_signal != 0)

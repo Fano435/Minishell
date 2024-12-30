@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:34:40 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/27 17:38:10 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/30 17:46:42 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,20 +50,13 @@ int	add_operator(t_token **token_list, char **line)
 	return (1);
 }
 
-int	is_delimitor(char c)
-{
-	if (c == '\0' || c == ' ')
-		return (1);
-	return (0);
-}
-
 int	word_len(char *str, int *quotes)
 {
 	int	i;
 
 	i = 0;
 	*quotes = 0;
-	while (!is_delimitor(str[i]) && !is_operator(str + i))
+	while (!(str[i] == '\0' || str[i] == ' ') && !is_operator(str + i))
 	{
 		if (str[i] == '\"')
 		{
@@ -71,7 +64,6 @@ int	word_len(char *str, int *quotes)
 			i++;
 			while (str[i] && str[i] != '\"')
 				i++;
-			i++;
 		}
 		if (str[i] == '\'')
 		{
@@ -79,7 +71,6 @@ int	word_len(char *str, int *quotes)
 			i++;
 			while (str[i] && str[i] != '\'')
 				i++;
-			i++;
 		}
 		i++;
 	}

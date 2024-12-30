@@ -6,25 +6,11 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:25:29 by idjakovi          #+#    #+#             */
-/*   Updated: 2024/12/27 17:48:46 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/30 19:11:29 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*parse_sing_quotes(char *str, int i, t_data *data)
-{
-	int		start;
-	char	*str_sing_quotes;
-
-	(void)data;
-	start = i;
-	i++;
-	while (str[i] != '\'')
-		i++;
-	str_sing_quotes = ft_substr(str, start, (i + 1) - start);
-	return (str_sing_quotes);
-}
 
 char	*parse_db_quotes(char *s, int i, t_data *data)
 {
@@ -42,8 +28,7 @@ char	*parse_db_quotes(char *s, int i, t_data *data)
 				str_db_q = handle_var_env_db_quotes(s, str_db_q, &i, data);
 			else if (s[i + 1] == '?')
 				str_db_q = handle_exit_status(str_db_q, &i, data);
-			else if (s[i + 1] == '\'' || s[i + 1] == '\"' || s[i + 1] == ' '
-				|| s[i + 1] == '$')
+			else if (!cond_handle_dollar(s, i))
 				str_db_q = handle_dollar(s, str_db_q, &i);
 		}
 		else
@@ -73,7 +58,7 @@ char	*parse_no_quotes(char *str, int i, t_data *data)
 			else if (str[i + 1] == '?')
 				str_no_q = handle_exit_status(str_no_q, &i, data);
 			else if (str[i + 1] == '\'' || str[i + 1] == '\"' || str[i
-				+ 1] == ' ' || str[i + 1] == '\0' || str[i + 1] == '$')
+					+ 1] == ' ' || str[i + 1] == '\0' || str[i + 1] == '$')
 				str_no_q = handle_dollar(str, str_no_q, &i);
 		}
 		else
@@ -99,9 +84,11 @@ char	*update_str_parsed(char *(*parser)(char *, int, t_data *), char *str,
 
 char	*parse_rl(char *str, t_data *data)
 {
-	int i;
-	char *str_parsed;
+	int		i;
+	char	*str_parsed;
 
+	if (!str)
+		return (NULL);
 	i = 0;
 	str_parsed = ft_strdup("");
 	if (check_closed_quotes(str) || check_full_w_s(str))

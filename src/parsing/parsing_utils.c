@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:27:11 by idjakovi          #+#    #+#             */
-/*   Updated: 2024/12/30 16:30:17 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/30 18:29:36 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,12 @@ char	*handle_var_env_no_quotes(char *str, char *str_no_quotes, int *i,
 	(*i)++;
 	start = *i;
 	while (str[*i] != ' ' && str[*i] != '\"' && str[*i] != '$'
-		&& str[*i] != '\'' && str[*i] != '\0')
+		&& str[*i] != '\'' && str[*i] != '\0' && str[*i] != '=')
 		(*i)++;
 	var_env = ft_substr(str, start, *i - start);
 	line_var = find_var(&data->env, var_env);
 	if (line_var != NULL)
 		temp = get_var_value(line_var);
-	else if (ft_strchr(var_env, '='))
-	{
-		while (*var_env != '=')
-			var_env++;
-		temp = ft_strdup(var_env);
-		// free(var_env);
-		// return (ft_strdup(""));
-	}
 	else
 		temp = ft_strdup("");
 	str_no_quotes = ft_strjoin(str_no_quotes, temp);
@@ -67,17 +59,14 @@ char	*handle_var_env_db_quotes(char *str, char *str_db_quotes, int *i,
 	(*i)++;
 	start = *i;
 	while (str[*i] != ' ' && str[*i] != '\"' && str[*i] != '\''
-		&& str[*i] != '$')
+		&& str[*i] != '$' && str[*i] != '=')
 		(*i)++;
 	var_env = ft_substr(str, start, *i - start);
 	line_var = find_var(&data->env, var_env);
 	if (line_var != NULL)
 		temp = get_var_value(line_var);
 	else
-	{
-		free(var_env);
-		return (ft_strdup("\""));
-	}
+		temp = ft_strdup("\"");
 	str_db_quotes = ft_strjoin(str_db_quotes, temp);
 	free(temp);
 	free(var_env);
