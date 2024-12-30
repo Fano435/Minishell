@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 17:25:29 by idjakovi          #+#    #+#             */
-/*   Updated: 2024/12/23 15:41:29 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/27 17:48:46 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,64 +26,61 @@ char	*parse_sing_quotes(char *str, int i, t_data *data)
 	return (str_sing_quotes);
 }
 
-char	*parse_db_quotes(char *str, int i, t_data *data)
+char	*parse_db_quotes(char *s, int i, t_data *data)
 {
-	char	*str_db_quotes;
+	char	*str_db_q;
 	char	*temp;
 
 	i++;
-	str_db_quotes = ft_strdup("\"");
-	while (str[i] != '\"')
+	str_db_q = ft_strdup("\"");
+	while (s[i] != '\"')
 	{
-		temp = str_db_quotes;
-		if (str[i] == '$')
+		temp = str_db_q;
+		if (s[i] == '$')
 		{
-			if (str[i + 1] != ' ' && str[i + 1] != '\"' && str[i + 1] != '\''
-				&& str[i + 1] != '$' && str[i + 1] != '?')
-				str_db_quotes = handle_var_env_db_quotes(str, str_db_quotes, &i,
-						data);
-			else if (str[i + 1] == '?')
-				str_db_quotes = handle_exit_status(str_db_quotes, &i, data);
-			else if (str[i + 1] == '\'' || str[i + 1] == '\"' || str[i
-				+ 1] == ' ')
-				str_db_quotes = handle_dollar(str, str_db_quotes, &i);
+			if (!norm_if_db_q(s, i))
+				str_db_q = handle_var_env_db_quotes(s, str_db_q, &i, data);
+			else if (s[i + 1] == '?')
+				str_db_q = handle_exit_status(str_db_q, &i, data);
+			else if (s[i + 1] == '\'' || s[i + 1] == '\"' || s[i + 1] == ' '
+				|| s[i + 1] == '$')
+				str_db_q = handle_dollar(s, str_db_q, &i);
 		}
 		else
-			str_db_quotes = handle_char_db_quotes(str, str_db_quotes, &i);
+			str_db_q = handle_char_db_quotes(s, str_db_q, &i);
 		free(temp);
 	}
-	temp = str_db_quotes;
-	str_db_quotes = ft_strjoin(str_db_quotes, "\"");
+	temp = str_db_q;
+	str_db_q = ft_strjoin(str_db_q, "\"");
 	free(temp);
-	return (str_db_quotes);
+	return (str_db_q);
 }
 
 char	*parse_no_quotes(char *str, int i, t_data *data)
 {
-	char	*str_no_quotes;
+	char	*str_no_q;
 	char	*temp;
 
-	str_no_quotes = ft_strdup("");
+	str_no_q = ft_strdup("");
 	while (str[i] != '\"' && str[i] != '\'' && str[i] != '\0')
 	{
-		temp = str_no_quotes;
+		temp = str_no_q;
 		if (str[i] == '$')
 		{
 			if (str[i + 1] != ' ' && str[i + 1] != '\"' && str[i + 1] != '\''
 				&& str[i + 1] != '$' && str[i + 1] != '?' && str[i + 1] != '\0')
-				str_no_quotes = handle_var_env_no_quotes(str, str_no_quotes, &i,
-						data);
+				str_no_q = handle_var_env_no_quotes(str, str_no_q, &i, data);
 			else if (str[i + 1] == '?')
-				str_no_quotes = handle_exit_status(str_no_quotes, &i, data);
+				str_no_q = handle_exit_status(str_no_q, &i, data);
 			else if (str[i + 1] == '\'' || str[i + 1] == '\"' || str[i
-				+ 1] == ' ' || str[i + 1] == '\0')
-				str_no_quotes = handle_dollar(str, str_no_quotes, &i);
+				+ 1] == ' ' || str[i + 1] == '\0' || str[i + 1] == '$')
+				str_no_q = handle_dollar(str, str_no_q, &i);
 		}
 		else
-			str_no_quotes = handle_char_no_quotes(str, str_no_quotes, &i);
+			str_no_q = handle_char_no_quotes(str, str_no_q, &i);
 		free(temp);
 	}
-	return (str_no_quotes);
+	return (str_no_q);
 }
 
 char	*update_str_parsed(char *(*parser)(char *, int, t_data *), char *str,
@@ -102,8 +99,8 @@ char	*update_str_parsed(char *(*parser)(char *, int, t_data *), char *str,
 
 char	*parse_rl(char *str, t_data *data)
 {
-	int		i;
-	char	*str_parsed;
+	int i;
+	char *str_parsed;
 
 	i = 0;
 	str_parsed = ft_strdup("");

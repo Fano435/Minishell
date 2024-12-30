@@ -6,13 +6,13 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 15:52:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/23 15:44:37 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/27 16:24:27 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	open_infile(char *file, int type)
+int	open_infile(t_data *data, char *file, int type)
 {
 	int	fd;
 
@@ -27,7 +27,7 @@ int	open_infile(char *file, int type)
 	}
 	if (type == HEREDOC)
 	{
-		here_doc(file);
+		here_doc(file, data);
 		if (access("tmp.txt", R_OK) != 0)
 			perror("tmp.txt");
 		fd = open("tmp.txt", O_RDONLY);
@@ -93,7 +93,7 @@ void	get_infile(t_data *data, t_token **token)
 		{
 			if (cmd->infile >= 0)
 				close(cmd->infile);
-			cmd->infile = open_infile(tmp->next->str, tmp->type);
+			cmd->infile = open_infile(data, tmp->next->str, tmp->type);
 			if (cmd->infile == ERR_FILE_OPEN)
 				cmd->skip_cmd = true;
 		}

@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:52:12 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/23 15:51:29 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/27 17:37:12 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,16 @@ int	check_syntax(t_token **token_list)
 		return (1);
 	head = token;
 	if (token->type == PIPE)
-	{
-		print_error("syntax error near unexpected token\n");
 		return (0);
-	}
 	while (token && token->next && token->next != head)
 	{
 		if ((is_operator(token->str) && token->type != PIPE)
 			&& (token->next == head || is_operator(token->next->str)))
-		{
-			print_error("syntax error near unexpected token \n");
 			return (0);
-		}
 		token = token->next;
 	}
 	if (is_operator(token->str))
-	{
-		print_error("syntax error near unexpected token 'newline'\n");
 		return (0);
-	}
 	return (1);
 }
 

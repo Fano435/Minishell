@@ -6,11 +6,24 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:45:18 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/11 19:06:41 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/30 13:50:49 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+bool	var_exist(char *env, char *str)
+{
+	int	i;
+
+	i = 0;
+	while (env[i] && env[i] != '=')
+		i++;
+	if ((int)ft_strlen(str) == i && ft_strncmp(env, str, i) == 0
+		&& env[i] == '=')
+		return (true);
+	return (false);
+}
 
 char	*find_var(t_list **lst, char *str)
 {
@@ -19,7 +32,7 @@ char	*find_var(t_list **lst, char *str)
 	tmp = *lst;
 	while (tmp)
 	{
-		if (ft_strnstr(tmp->content, str, ft_strlen(str)))
+		if (var_exist(tmp->content, str))
 			return (ft_strdup(tmp->content));
 		tmp = tmp->next;
 	}

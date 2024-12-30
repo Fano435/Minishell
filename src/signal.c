@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 18:18:07 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/19 19:47:25 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/30 16:20:36 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,18 @@
 
 void	handle_sigint(int code)
 {
-	(void)code;
+	if (code == SIGINT)
+	{
+		rl_done = 1;
+		g_signal = code + 128;
+	}
 	printf("\n");
-	rl_on_new_line();
 	rl_replace_line("", 0);
+	rl_on_new_line();
 	rl_redisplay();
 }
 
-void	cmd_sigint(int code)
+void	cmd_sig(int code)
 {
 	(void)code;
 	printf("\n");

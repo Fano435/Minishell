@@ -6,13 +6,13 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 17:05:06 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/27 16:17:56 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/30 16:08:25 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-pid_t	g_signal;
+pid_t	g_signal = 0;
 
 void	free_tokens(t_token **token)
 {
@@ -68,25 +68,39 @@ void	free_env(t_list **list)
 	list = NULL;
 }
 
+void	execution(t_data *data, char *rl)
+{
+	char	*parsed;
+
+	parsed = parse_rl(rl, data);
+	create_token_list(data, parsed);
+	create_cmd_list(data, data->tokens);
+	exec_pipeline(data);
+	free_tokens(&data->tokens);
+	free_cmds(&data->cmds);
+	free(parsed);
+}
+
 int	main(int ac, char **av, char **env)
 {
 	char	*rl;
-	char	*parsed;
 	t_data	data;
+	char	*parsed;
 
 	init_data(ac, av, env, &data);
 	while (1)
 	{
 		rl = readline("minishell > ");
+		parsed = parse_rl(rl, &data);
 		if (rl == NULL)
 			break ;
-		parsed = parse_rl(rl, &data);
-		create_token_list(&data, parsed);
-		create_cmd_list(&data, data.tokens);
-		exec_pipeline(&data);
-		free_tokens(&data.tokens);
-		free_cmds(&data.cmds);
-		free(parsed);
+		if (g_signal != 0)
+		{
+			data.exit_code = g_signal;
+			g_signal = 0;
+			continue ;
+		}
+		execution(&data, rl);
 		unlink("tmp.txt");
 		add_history(rl);
 	}

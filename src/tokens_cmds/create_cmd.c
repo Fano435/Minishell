@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:30:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/23 15:57:17 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/27 16:23:37 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ void	create_cmd_list(t_data *data, t_token *token)
 			create_cmd(data, &token);
 		if (token->prev->type != ARG && token->prev->type != CMD
 			&& token->type == HEREDOC)
-			here_doc(token->next->str);
+			here_doc(token->next->str, data);
 		token = token->next;
 	}
 	if (token->type == CMD)
 		create_cmd(data, &token);
 	if (token->prev->type != ARG && token->prev->type != CMD
 		&& token->type == HEREDOC)
-		here_doc(token->next->str);
+		here_doc(token->next->str, data);
 }

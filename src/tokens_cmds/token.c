@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 16:34:40 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/19 19:42:35 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/27 17:38:10 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ void	create_token_list(t_data *data, char *line)
 	assign_words_type(&data->tokens);
 	if (!check_syntax(&data->tokens))
 	{
+		print_error("syntax error near unexpected token \n");
 		free_tokens(&data->tokens);
 		data->tokens = NULL;
 		data->exit_code = 2;

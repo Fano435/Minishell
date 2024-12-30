@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:57:43 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/23 15:02:15 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/27 18:22:56 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,10 +75,10 @@ int					ft_tablen(char **tab);
 
 void				print_error(char *str);
 void				signals(void);
-void				cmd_sigint(int code);
+void				cmd_sig(int code);
 void				handle_sigint(int code);
 void				init_data(int ac, char **av, char **env, t_data *data);
-void				here_doc(char *lim);
+void				here_doc(char *lim, t_data *data);
 
 // builtins
 int					ft_echo(char **args);
@@ -157,6 +157,7 @@ char				*handle_var_env_db_quotes(char *str, char *str_db_quotes,
 						int *i, t_data *data);
 char				*handle_char_db_quotes(char *str, char *str_db_quotes,
 						int *i);
+int					norm_if_db_q(char *s, int i);
 
 // parsing.c
 char				*parse_sing_quotes(char *str, int i, t_data *data);

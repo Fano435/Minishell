@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 17:55:33 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/23 15:29:00 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/30 16:31:59 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,11 @@ void	wait_all(t_data *data)
 	int		i;
 	int		status;
 
+	status = 0;
 	i = 0;
 	cmd = data->cmds;
-	signal(SIGINT, cmd_sigint);
+	signal(SIGINT, cmd_sig);
+	signal(SIGQUIT, cmd_sig);
 	while (cmd)
 	{
 		if (!is_builtin(cmd->cmd_params[0]) || data->cmds != cmd)

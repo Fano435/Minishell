@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 17:51:36 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/23 15:40:56 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/30 15:52:41 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,6 @@ void	exec(t_data *data, t_cmd *cmd)
 	}
 	check_exec(path);
 	execve(path, cmd->cmd_params, NULL);
-	exit(EXIT_FAILURE);
 	free(path);
+	exit(EXIT_FAILURE);
 }

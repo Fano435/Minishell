@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 16:00:24 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/23 15:50:24 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/30 15:28:33 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,12 @@ static int	manage_negs(int n)
 		return (n % 256);
 }
 
+void	advance_space(char *str, int *i)
+{
+	while ((str[(*i)] >= 9 && str[(*i)] <= 13) || str[(*i)] == ' ')
+		(*i)++;
+}
+
 long	atol_exit(char *str, bool *valid)
 {
 	long	res;
@@ -30,8 +36,7 @@ long	atol_exit(char *str, bool *valid)
 	res = 0;
 	sign = 1;
 	i = 0;
-	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
-		i++;
+	advance_space(str, &i);
 	if (str[i] == '-' || str[i] == '+')
 	{
 		if (str[i] == '-')
@@ -41,10 +46,9 @@ long	atol_exit(char *str, bool *valid)
 	start = i;
 	while (str[i] && ft_isdigit(str[i]))
 		res = res * 10 + (str[i++] - '0');
-	if (i - start > 19 || start == i || res < 0)
+	if (i - start > 19 || start == i || (res < 0 && res != LLONG_MIN))
 		*valid = false;
-	while ((str[i] >= 9 && str[i] <= 13) || str[i] == ' ')
-		i++;
+	advance_space(str, &i);
 	if (str[i])
 		*valid = false;
 	return (sign * res);

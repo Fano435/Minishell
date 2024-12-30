@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 19:34:30 by idjakovi          #+#    #+#             */
-/*   Updated: 2024/12/11 17:05:21 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/27 18:22:43 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,12 @@ char	*handle_dollar(char *str, char *substr, int *i)
 	substr = ft_strjoin(substr, temp);
 	free(temp);
 	return (substr);
+}
+
+int	norm_if_db_q(char *s, int i)
+{
+	if (s[i + 1] != ' ' && s[i + 1] != '\"' && s[i + 1] != '\'' && s[i
+		+ 1] != '$' && s[i + 1] != '?')
+		return (0);
+	return (1);
 }
