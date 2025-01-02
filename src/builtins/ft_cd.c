@@ -62,6 +62,7 @@ static void	update_wd(t_data *data, char *var)
 int	ft_cd(t_data *data, char **params)
 {
 	char	*path;
+	int		success;
 
 	if (ft_tablen(params) > 2)
 	{
@@ -73,10 +74,10 @@ int	ft_cd(t_data *data, char **params)
 		path = get_var_value(find_var(&data->env, "HOME"));
 	if (!path)
 		return (1);
-	g_signal = chdir(path);
+	success = chdir(path);
 	if (path != params[1])
 		free(path);
-	if (g_signal == -1)
+	if (success != 0)
 	{
 		perror("cd");
 		return (1);
