@@ -73,13 +73,16 @@ int	ft_cd(t_data *data, char **params)
 	if (path == NULL)
 		path = get_var_value(find_var(&data->env, "HOME"));
 	if (!path)
+	{
+		print_error("HOME not set\n");
 		return (1);
+	}
 	success = chdir(path);
 	if (path != params[1])
 		free(path);
 	if (success != 0)
 	{
-		perror("cd");
+		perror(params[1]);
 		return (1);
 	}
 	update_wd(data, "OLDPWD=");

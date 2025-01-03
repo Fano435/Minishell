@@ -8,7 +8,7 @@ LIBFT_LIB = libft/libft.a
 
 FILES = main init signal list_utils ft_echo ft_cd ft_pwd ft_export ft_env ft_unset \
 		ft_exit token token_utils create_cmd cmd_utils cmd_fds exec parsing parsing_utils \
-		utils builtins exec_parsing heredoc builtin_utils debug utils_2
+		utils builtins exec_parsing heredoc builtin_utils debug utils_2 create_token
 		
 SRCS	=	$(addprefix $(SRC_DIR), $(addsuffix .c, $(FILES)))
 OBJS	=	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(FILES)))
