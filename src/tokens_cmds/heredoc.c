@@ -50,6 +50,7 @@ int	here_doc(char *lim, t_data *data)
 	pid_t	pid;
 	int		status;
 
+	status = 0;
 	pid = fork();
 	if (pid == 0)
 		child_here_doc(lim, data);

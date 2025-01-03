@@ -6,7 +6,7 @@
 /*   By: jrasamim <jrasamim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 15:52:12 by jrasamim          #+#    #+#             */
-/*   Updated: 2024/12/27 17:37:12 by jrasamim         ###   ########.fr       */
+/*   Updated: 2024/12/31 16:39:53 by jrasamim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,26 @@ void	assign_words_type(t_token **list)
 		token->type = ARG;
 }
 
+void	copy_double_quotes(char *str, char *word, int *i, int *j)
+{
+	(*i)++;
+	while (str[*i] && str[*i] != '\"')
+	{
+		word[(*j)++] = str[*i];
+		(*i)++;
+	}
+}
+
+void	copy_single_quotes(char *str, char *word, int *i, int *j)
+{
+	(*i)++;
+	while (str[*i] && str[*i] != '\'')
+	{
+		word[(*j)++] = str[*i];
+		(*i)++;
+	}
+}
+
 void	copy_token(char *str, char *word, int len)
 {
 	int	i;
@@ -75,54 +95,13 @@ void	copy_token(char *str, char *word, int len)
 		return ;
 	while (str[i] && i < len)
 	{
-		if (str[i] == '"' || str[i] == '\'')
-			i++;
+		if (str[i] == '\"')
+			copy_double_quotes(str, word, &i, &j);
+		else if (str[i] == '\'')
+			copy_single_quotes(str, word, &i, &j);
 		else
-		{
 			word[j++] = str[i];
-			i++;
-		}
+		i++;
 	}
 	word[j] = '\0';
-}
-
-t_token	*new_tokken(char *str, int type)
-{
-	t_token	*new;
-
-	if (!str)
-		return (NULL);
-	new = malloc(sizeof(t_token));
-	if (!new)
-	{
-		free(str);
-		return (NULL);
-	}
-	new->str = str;
-	new->type = type;
-	new->next = NULL;
-	new->prev = NULL;
-	return (new);
-}
-
-void	append_token(t_token **tokken_list, char *str, int type)
-{
-	t_token	*new;
-
-	new = new_tokken(str, type);
-	if (!new)
-		return ;
-	if (!*tokken_list)
-	{
-		*tokken_list = new;
-		(*tokken_list)->next = *tokken_list;
-		(*tokken_list)->prev = *tokken_list;
-	}
-	else
-	{
-		new->prev = (*tokken_list)->prev;
-		new->next = (*tokken_list);
-		(*tokken_list)->prev->next = new;
-		(*tokken_list)->prev = new;
-	}
 }

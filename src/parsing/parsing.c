@@ -41,6 +41,14 @@ char	*parse_db_quotes(char *s, int i, t_data *data)
 	return (str_db_q);
 }
 
+bool	is_valid_char(char c)
+{
+	if (c != ' ' && c != '\"' && c != '\'' && c != '$' && c != '?' && c != '\0'
+		&& c != '=')
+		return (true);
+	return (false);
+}
+
 char	*parse_no_quotes(char *str, int i, t_data *data)
 {
 	char	*str_no_q;
@@ -52,14 +60,15 @@ char	*parse_no_quotes(char *str, int i, t_data *data)
 		temp = str_no_q;
 		if (str[i] == '$')
 		{
-			if (str[i + 1] != ' ' && str[i + 1] != '\"' && str[i + 1] != '\''
-				&& str[i + 1] != '$' && str[i + 1] != '?' && str[i + 1] != '\0')
+			if (is_valid_char(str[i + 1]))
 				str_no_q = handle_var_env_no_quotes(str, str_no_q, &i, data);
 			else if (str[i + 1] == '?')
 				str_no_q = handle_exit_status(str_no_q, &i, data);
-			else if (str[i + 1] == '\'' || str[i + 1] == '\"' || str[i
-					+ 1] == ' ' || str[i + 1] == '\0' || str[i + 1] == '$')
+			else if (str[i + 1] == ' ' || str[i + 1] == '\0' || str[i
+				+ 1] == '$' || str[i + 1] == '=')
 				str_no_q = handle_dollar(str, str_no_q, &i);
+			else if (str[i + 1] == '\"' || str[i + 1] == '\'')
+				break ;
 		}
 		else
 			str_no_q = handle_char_no_quotes(str, str_no_q, &i);

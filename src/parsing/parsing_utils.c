@@ -66,7 +66,7 @@ char	*handle_var_env_db_quotes(char *str, char *str_db_quotes, int *i,
 	if (line_var != NULL)
 		temp = get_var_value(line_var);
 	else
-		temp = ft_strdup("\"");
+		temp = ft_strdup("");
 	str_db_quotes = ft_strjoin(str_db_quotes, temp);
 	free(temp);
 	free(var_env);
