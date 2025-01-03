@@ -99,7 +99,7 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		}
 		execution(&data, rl);
-		unlink("tmp.txt");
+		unlink(".tmp");
 		add_history(rl);
 	}
 	rl_clear_history();

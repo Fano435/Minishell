@@ -90,7 +90,7 @@ void	exec(t_data *data, t_cmd *cmd)
 	char	*path;
 
 	if (cmd->skip_cmd)
-		exit(EXIT_FAILURE);
+		exit(data->exit_code);
 	path = get_path(data, cmd->cmd_params[0]);
 	if (!path)
 	{

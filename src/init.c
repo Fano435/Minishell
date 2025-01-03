@@ -63,6 +63,8 @@ int	copy_env(t_data *data, char **env)
 	t_list	*tmp;
 
 	i = 0;
+	if (!env)
+		return (0);
 	while (env[i])
 	{
 		tmp = ft_lstnew(env[i]);

@@ -14,25 +14,23 @@
 
 static void	sig_heredoc(int code)
 {
-	g_signal = code;
-	rl_replace_line("", 0);
 	printf("\n");
-	rl_on_new_line();
+	exit(code + 128);
 }
 
-void	here_doc(char *lim, t_data *data)
+void	child_here_doc(char *lim, t_data *data)
 {
 	char	*here_doc;
 	char	*parsed;
 	int		tmp_fd;
 
-	tmp_fd = open("tmp.txt", O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	signal(SIGINT, sig_heredoc);
+	tmp_fd = open(".tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777);
+	if (tmp_fd < 0)
+		exit(1);
 	while (1)
 	{
-		here_doc = readline("> ");
-		if (g_signal != 0)
-			break ;
+		here_doc = readline("heredoc > ");
 		if (!here_doc)
 			break ;
 		if (ft_strcmp(here_doc, lim) == 0)
@@ -43,7 +41,24 @@ void	here_doc(char *lim, t_data *data)
 		free(parsed);
 		free(here_doc);
 	}
-	g_signal = 0;
 	close(tmp_fd);
-	free(here_doc);
+	exit(0);
+}
+
+int	here_doc(char *lim, t_data *data)
+{
+	pid_t	pid;
+	int		status;
+
+	pid = fork();
+	if (pid == 0)
+		child_here_doc(lim, data);
+	signal(SIGINT, SIG_IGN);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		data->exit_code = WEXITSTATUS(status);
+	signals();
+	if (data->exit_code != 0)
+		return (-1);
+	return (0);
 }

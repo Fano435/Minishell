@@ -27,10 +27,11 @@ int	open_infile(t_data *data, char *file, int type)
 	}
 	if (type == HEREDOC)
 	{
-		here_doc(file, data);
-		if (access("tmp.txt", R_OK) != 0)
-			perror("tmp.txt");
-		fd = open("tmp.txt", O_RDONLY);
+		if (here_doc(file, data) == -1)
+			return (ERR_FILE_OPEN);
+		if (access(".tmp", R_OK) != 0)
+			perror(".tmp");
+		fd = open(".tmp", O_RDONLY);
 	}
 	return (fd);
 }

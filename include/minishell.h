@@ -78,7 +78,7 @@ void				signals(void);
 void				cmd_sig(int code);
 void				handle_sigint(int code);
 void				init_data(int ac, char **av, char **env, t_data *data);
-void				here_doc(char *lim, t_data *data);
+int					here_doc(char *lim, t_data *data);
 
 // builtins
 int					ft_echo(char **args);

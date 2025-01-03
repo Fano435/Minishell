@@ -83,8 +83,9 @@ void	wait_all(t_data *data)
 	signal(SIGQUIT, cmd_sig);
 	while (cmd)
 	{
-		if (!is_builtin(cmd->cmd_params[0]) || data->cmds != cmd)
-			wait(&status);
+		if (is_builtin(cmd->cmd_params[0]) && data->cmds == cmd && !cmd->next)
+			break ;
+		wait(&status);
 		if (WIFEXITED(status))
 			data->exit_code = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))
