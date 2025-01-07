@@ -74,7 +74,7 @@ typedef struct s_data
 
 int					ft_tablen(char **tab);
 
-void				print_error(char *str);
+int					print_error(char *str);
 void				signals(void);
 void				cmd_sig(int code);
 void				handle_sigint(int code);

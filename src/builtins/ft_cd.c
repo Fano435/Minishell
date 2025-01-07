@@ -12,10 +12,11 @@
 
 #include "minishell.h"
 
-void	print_error(char *str)
+int	print_error(char *str)
 {
 	if (str)
 		write(2, str, ft_strlen(str));
+	return (1);
 }
 
 t_list	*find_var_node(t_data *data, char *var)
@@ -66,18 +67,12 @@ int	ft_cd(t_data *data, char **params)
 	int		success;
 
 	if (ft_tablen(params) > 2)
-	{
-		print_error("Too many arguments\n");
-		return (1);
-	}
+		return (print_error("Too many arguments\n"));
 	path = params[1];
 	if (path == NULL)
 		path = get_var_value(find_var(&data->env, "HOME"));
 	if (!path)
-	{
-		print_error("HOME not set\n");
-		return (1);
-	}
+		return (print_error("HOME not set\n"));
 	success = chdir(path);
 	if (path != params[1])
 		free(path);

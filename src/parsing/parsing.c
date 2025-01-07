@@ -65,7 +65,7 @@ char	*parse_no_quotes(char *str, int i, t_data *data)
 			else if (str[i + 1] == '?')
 				str_no_q = handle_exit_status(str_no_q, &i, data);
 			else if (str[i + 1] == ' ' || str[i + 1] == '\0' || str[i
-				+ 1] == '$' || str[i + 1] == '=')
+					+ 1] == '$' || str[i + 1] == '=')
 				str_no_q = handle_dollar(str, str_no_q, &i);
 			else if (str[i + 1] == '\"' || str[i + 1] == '\'')
 				break ;

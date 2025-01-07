@@ -89,7 +89,10 @@ void	add_word(t_token **token_list, char **line)
 		return ;
 	word = malloc((length + 1 - (quotes * 2)) * sizeof(char));
 	if (!word)
-		return (print_error(ERR_MALLOC));
+	{
+		print_error(ERR_MALLOC);
+		return ;
+	}
 	copy_token(*line, word, length);
 	append_token(token_list, word, 0);
 	*line += length - 1;
