@@ -59,6 +59,7 @@ typedef struct s_cmd
 	int				infile;
 	int				outfile;
 	char			**cmd_params;
+	pid_t			pid;
 	struct s_cmd	*next;
 }					t_cmd;
 

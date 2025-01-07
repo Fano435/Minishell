@@ -101,6 +101,7 @@ int	main(int ac, char **av, char **env)
 		execution(&data, rl);
 		unlink(".tmp");
 		add_history(rl);
+		free(rl);
 	}
 	rl_clear_history();
 	free_env(&data.env);

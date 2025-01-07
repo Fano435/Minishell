@@ -19,7 +19,7 @@ void	create_cmd(t_data *data, t_token **token)
 	get_outfile(data, token);
 }
 
-void	create_cmd_list(t_data *data, t_token *token)
+void	open_heredocs(t_data *data, t_token *token)
 {
 	t_token	*head;
 	t_cmd	*cmd;
@@ -31,16 +31,31 @@ void	create_cmd_list(t_data *data, t_token *token)
 	head = token;
 	while (token && token->next != head)
 	{
+		if (token->type == HEREDOC)
+			here_doc(token->next->str, data);
+		token = token->next;
+	}
+	if (token->type == HEREDOC)
+		here_doc(token->next->str, data);
+}
+
+void	create_cmd_list(t_data *data, t_token *token)
+{
+	t_token	*head;
+	t_cmd	*cmd;
+
+	if (!token)
+		return ;
+	cmd = NULL;
+	data->cmds = cmd;
+	head = token;
+	open_heredocs(data, token);
+	while (token && token->next != head)
+	{
 		if (token->type == CMD)
 			create_cmd(data, &token);
-		if (token->prev->type != ARG && token->prev->type != CMD
-			&& token->type == HEREDOC)
-			here_doc(token->next->str, data);
 		token = token->next;
 	}
 	if (token->type == CMD)
 		create_cmd(data, &token);
-	if (token->prev->type != ARG && token->prev->type != CMD
-		&& token->type == HEREDOC)
-		here_doc(token->next->str, data);
 }

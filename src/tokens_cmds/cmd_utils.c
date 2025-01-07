@@ -40,6 +40,7 @@ t_cmd	*new_cmd(char **args, int infile, int outfile)
 	new->infile = infile;
 	new->outfile = outfile;
 	new->cmd_params = args;
+	new->pid = -1;
 	new->next = NULL;
 	return (new);
 }

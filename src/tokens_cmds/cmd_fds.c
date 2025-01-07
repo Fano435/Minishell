@@ -16,6 +16,7 @@ int	open_infile(t_data *data, char *file, int type)
 {
 	int	fd;
 
+	(void)data;
 	fd = NO_FD;
 	if (type == PIPE)
 		return (fd);
@@ -27,10 +28,10 @@ int	open_infile(t_data *data, char *file, int type)
 	}
 	if (type == HEREDOC)
 	{
-		if (here_doc(file, data) == -1)
-			return (ERR_FILE_OPEN);
+		// if (here_doc(file, data) == -1)
+		// 	return (ERR_FILE_OPEN);
 		if (access(".tmp", R_OK) != 0)
-			perror(".tmp");
+			return (ERR_FILE_OPEN);
 		fd = open(".tmp", O_RDONLY);
 	}
 	return (fd);
@@ -73,7 +74,10 @@ void	get_outfile(t_data *data, t_token **token)
 				close(cmd->outfile);
 			cmd->outfile = open_outfile(tmp->next->str, tmp->type);
 			if (cmd->outfile == ERR_FILE_OPEN)
+			{
 				cmd->skip_cmd = true;
+				return ;
+			}
 		}
 		tmp = tmp->next;
 	}
@@ -96,7 +100,10 @@ void	get_infile(t_data *data, t_token **token)
 				close(cmd->infile);
 			cmd->infile = open_infile(data, tmp->next->str, tmp->type);
 			if (cmd->infile == ERR_FILE_OPEN)
+			{
 				cmd->skip_cmd = true;
+				return ;
+			}
 		}
 		tmp = tmp->next;
 	}

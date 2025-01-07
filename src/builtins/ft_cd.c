@@ -44,7 +44,8 @@ static void	update_wd(t_data *data, char *var)
 		return ;
 	if (ft_strcmp(var, "PWD=") == 0)
 	{
-		getcwd(buffer, sizeof(buffer));
+		if (!getcwd(buffer, sizeof(buffer)))
+			return ;
 		pwd = ft_strjoin(var, buffer);
 	}
 	else

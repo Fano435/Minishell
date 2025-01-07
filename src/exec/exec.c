@@ -37,15 +37,19 @@ void	exec_last(t_data *data, t_cmd *cmd, int input_fd)
 {
 	if (is_builtin(cmd->cmd_params[0]) && data->cmds == cmd)
 		no_fork_builtin(data, cmd);
-	else if (fork() == 0)
+	else
 	{
-		cmd_redirections(data, cmd, input_fd, 1);
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		if (is_builtin(cmd->cmd_params[0]))
-			exit(exec_builtin_cmd(data, cmd));
-		exec(data, cmd);
-		exit(EXIT_FAILURE);
+		cmd->pid = fork();
+		if (cmd->pid == 0)
+		{
+			cmd_redirections(data, cmd, input_fd, 1);
+			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
+			if (is_builtin(cmd->cmd_params[0]))
+				exit(exec_builtin_cmd(data, cmd));
+			exec(data, cmd);
+			exit(EXIT_FAILURE);
+		}
 	}
 	if (input_fd != STDIN_FILENO)
 		close(input_fd);
@@ -53,7 +57,8 @@ void	exec_last(t_data *data, t_cmd *cmd, int input_fd)
 
 void	exec_child(t_data *data, t_cmd *cmd, int input_fd, int pipe_fd[2])
 {
-	if (fork() == 0)
+	cmd->pid = fork();
+	if (cmd->pid == 0)
 	{
 		cmd_redirections(data, cmd, input_fd, pipe_fd[1]);
 		close(pipe_fd[0]);
@@ -85,7 +90,7 @@ void	wait_all(t_data *data)
 	{
 		if (is_builtin(cmd->cmd_params[0]) && data->cmds == cmd && !cmd->next)
 			break ;
-		wait(&status);
+		waitpid(cmd->pid, &status, 0);
 		if (WIFEXITED(status))
 			data->exit_code = WEXITSTATUS(status);
 		else if (WIFSIGNALED(status))

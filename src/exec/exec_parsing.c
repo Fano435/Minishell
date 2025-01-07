@@ -48,7 +48,7 @@ char	*get_path(t_data *data, char *cmd)
 
 	if (!cmd)
 		return (NULL);
-	if (access(cmd, F_OK) == 0)
+	if (access(cmd, F_OK) == 0 && cmd[0] == '.')
 		return (ft_strdup(cmd));
 	path_env = get_var_value(find_var(&data->env, "PATH"));
 	if (!path_env)

@@ -14,6 +14,7 @@
 
 static void	sig_heredoc(int code)
 {
+	unlink(".tmp");
 	printf("\n");
 	exit(code + 128);
 }
@@ -24,10 +25,10 @@ void	child_here_doc(char *lim, t_data *data)
 	char	*parsed;
 	int		tmp_fd;
 
-	signal(SIGINT, sig_heredoc);
 	tmp_fd = open(".tmp", O_CREAT | O_WRONLY | O_TRUNC, 0777);
 	if (tmp_fd < 0)
 		exit(1);
+	signal(SIGINT, sig_heredoc);
 	while (1)
 	{
 		here_doc = readline("heredoc > ");
