@@ -31,7 +31,7 @@ void	child_here_doc(char *lim, t_data *data)
 	signal(SIGINT, sig_heredoc);
 	while (1)
 	{
-		here_doc = readline("heredoc > ");
+		here_doc = readline("> ");
 		if (!here_doc)
 			break ;
 		if (ft_strcmp(here_doc, lim) == 0)
